@@ -2,6 +2,8 @@ from django.shortcuts import render,redirect
 from Admin.models import *
 from Guest.models import *
 from Driver.models import *
+
+
 # Create your views here.
 def NewUser(request):
     districtdata=tbl_district.objects.all()
