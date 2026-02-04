@@ -1,0 +1,509 @@
+{% extends 'Driver/Head.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
+
+body{
+    background:#f4f6fb;
+}
+
+/* RIDEX THEME COLOR */
+:root{
+    --ridex-gold:#C49A5A;
+}
+
+/* PAGE TITLE */
+.profile-title{
+    text-align:center;
+    margin:30px 0;
+}
+
+.profile-title h1{
+    font-size:32px;
+    font-weight:800;
+    font-style:italic;
+    color:var(--ridex-gold);
+}
+
+/* CARD */
+.profile-card{
+    width:700px;
+    max-width:95%;
+    margin:auto;
+    background:#ffffff;
+    border-radius:20px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.12);
+    padding:35px 40px;
+    animation:fadeUp 0.7s ease;
+}
+
+/* PROFILE IMAGE */
+.image-section{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.image-section img.profile-img{
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    object-fit:cover;
+    border:5px solid var(--ridex-gold);
+}
+
+/* LICENSE IMAGE */
+.license-img{
+    width:220px;
+    height:150px;
+    border-radius:10px;
+    object-fit:cover;
+    border:3px solid var(--ridex-gold);
+    margin-top:10px;
+}
+
+/* INFO ROWS */
+.info-row{
+    display:flex;
+    padding:12px 0;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.info-row:last-child{
+    border-bottom:none;
+}
+
+.info-label{
+    width:40%;
+    font-weight:600;
+    color:#374151;
+}
+
+.info-value{
+    width:60%;
+    color:#111827;
+}
+
+/* BUTTONS */
+.action-buttons{
+    text-align:center;
+    margin-top:35px;
+}
+
+.action-buttons a{
+    text-decoration:none;
+    padding:12px 34px;
+    border-radius:30px;
+    font-size:14px;
+    font-weight:600;
+    margin:0 18px;   /* button gap */
+    transition:0.3s;
+    background:var(--ridex-gold);
+    color:#111;
+}
+
+.action-buttons a:hover{
+    background:#b88b4f;
+    box-shadow:0 10px 25px rgba(196,154,90,0.45);
+    transform:translateY(-2px);
+}
+
+/* ANIMATION */
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+    .info-row{
+        flex-direction:column;
+    }
+    .info-label,
+    .info-value{
+        width:100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="profile-title">
+    <h1>My Profile</h1>
+</div>
+
+<div class="profile-card">
+
+    <!-- PROFILE IMAGE -->
+    <div class="image-section">
+        <img src="{{Data.driver_photo.url}}" 
+             alt="Profile Photo"
+             class="profile-img">
+    </div>
+
+    <!-- DETAILS -->
+    <div class="info-row">
+        <div class="info-label">Name</div>
+        <div class="info-value">{{Data.driver_name}}</div>
+    </div>
+
+    <div class="info-row">
+        <div class="info-label">Email</div>
+        <div class="info-value">{{Data.driver_email}}</div>
+    </div>
+
+    <div class="info-row">
+        <div class="info-label">Contact</div>
+        <div class="info-value">{{Data.driver_contact}}</div>
+    </div>
+
+    <div class="info-row">
+        <div class="info-label">Address</div>
+        <div class="info-value">{{Data.driver_address}}</div>
+    </div>
+
+    <div class="info-row">
+        <div class="info-label">Date of Joining</div>
+        <div class="info-value">{{Data.driver_doj}}</div>
+    </div>
+
+    <div class="info-row">
+        <div class="info-label">District</div>
+        <div class="info-value">{{Data.place.district.district_name}}</div>
+    </div>
+
+    <div class="info-row">
+        <div class="info-label">Place</div>
+        <div class="info-value">{{Data.place.place_name}}</div>
+    </div>
+
+    <!-- LICENSE -->
+    <div class="info-row">
+        <div class="info-label">License</div>
+        <div class="info-value">
+            <img src="{{Data.driver_license.url}}" 
+                 alt="License Photo"
+                 class="license-img">
+        </div>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="action-buttons">
+        <a href="{% url 'Driver:EditProfile' %}">Edit Profile</a>
+        <a href="{% url 'Driver:ChangePassword' %}">Change Password</a>
+    </div>
+
+</div>
+
+</body>
+</html>
+
+{% endblock content %}
+
+
+
+
+
+
+
+<!-- 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
+
+body{
+    background:#f4f6fb;
+}
+
+/* PAGE TITLE */
+.profile-title{
+    text-align:center;
+    margin:30px 0;
+}
+
+.profile-title h1{
+    font-size:32px;
+    font-weight:800;
+    color:#1f2937;
+}
+
+/* CARD */
+.profile-card{
+    width:700px;
+    max-width:95%;
+    margin:auto;
+    background:#ffffff;
+    border-radius:20px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.12);
+    padding:35px 40px;
+    animation:fadeUp 0.7s ease;
+}
+
+/* PROFILE IMAGES */
+.image-section{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.image-section img{
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    object-fit:cover;
+    border:5px solid #e5e7eb;
+    margin:10px;
+}
+
+/* INFO ROWS */
+.info-row{
+    display:flex;
+    padding:12px 0;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.info-row:last-child{
+    border-bottom:none;
+}
+
+.info-label{
+    width:40%;
+    font-weight:600;
+    color:#374151;
+}
+
+.info-value{
+    width:60%;
+    color:#111827;
+}
+
+/* BUTTONS */
+.action-buttons{
+    text-align:center;
+    margin-top:30px;
+}
+
+.action-buttons a{
+    text-decoration:none;
+    padding:12px 30px;
+    border-radius:30px;
+    font-size:14px;
+    font-weight:600;
+    margin:0 10px;
+    transition:0.3s;
+}
+
+.edit-btn{
+    background:#3b82f6;
+    color:#ffffff;
+}
+
+.edit-btn:hover{
+    box-shadow:0 10px 25px rgba(59,130,246,0.45);
+    transform:translateY(-2px);
+}
+
+.pass-btn{
+    background:#10b981;
+    color:#ffffff;
+}
+
+.pass-btn:hover{
+    box-shadow:0 10px 25px rgba(16,185,129,0.45);
+    transform:translateY(-2px);
+}
+
+/* ANIMATION */
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+    .info-row{
+        flex-direction:column;
+    }
+    .info-label,
+    .info-value{
+        width:100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="profile-title">
+    <h1>My Profile</h1>
+</div>
+
+<div class="profile-card">
+
+    <!-- IMAGES 
+    <div class="image-section">
+        <img src="{{Data.driver_photo.url}}" alt="Profile Photo">
+        
+    </div>
+
+    <!-- DETAILS 
+    <div class="info-row">
+        <div class="info-label">Name</div>
+        <div class="info-value">{{Data.driver_name}}</div>
+    </div>
+
+    <div class="info-row">
+        <div class="info-label">Email</div>
+        <div class="info-value">{{Data.driver_email}}</div>
+    </div>
+
+    <div class="info-row">
+        <div class="info-label">Contact</div>
+        <div class="info-value">{{Data.driver_contact}}</div>
+    </div>
+
+    <div class="info-row">
+        <div class="info-label">Address</div>
+        <div class="info-value">{{Data.driver_address}}</div>
+    </div>
+
+    <div class="info-row">
+        <div class="info-label">Date of Joining</div>
+        <div class="info-value">{{Data.driver_doj}}</div>
+    </div>
+
+    <div class="info-row">
+        <div class="info-label">District</div>
+        <div class="info-value">{{Data.place.district.district_name}}</div>
+    </div>
+
+    <div class="info-row">
+        <div class="info-label">Place</div>
+        <div class="info-value">{{Data.place.place_name}}</div>
+    </div>
+    <div class="info-row">
+        <div class="info-label">License</div>
+    <div class="image-section">
+      <img src="{{Data.driver_license.url}}" alt="License Photo">
+      </div>
+    </div>
+
+    <!-- ACTION BUTTONS 
+    <div class="action-buttons">
+        <a href="{% url 'Driver:EditProfile' %}" class="edit-btn">Edit Profile</a>
+        <a href="{% url 'Driver:ChangePassword' %}" class="pass-btn">Change Password</a>
+    </div>
+
+</div>
+
+</body>
+</html>
+
+-->
+
+
+
+
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Profile</title>
+   <center>
+   <h1>MY PROFILE</h1>
+</head>
+<body>
+    <form action="" method="post">
+       {% csrf_token %}
+    <table border="1">
+      
+ <tr>
+ <td>Name</td>
+ <td>{{Data.driver_name}}</td>
+ </tr>
+<tr>
+ <td>Email</td>
+ <td>{{Data.driver_email}}</td>
+ </tr>
+ <tr>
+ <td>Contact</td>
+ <td>{{Data.driver_contact}}</td>
+ </tr>
+ <tr>
+ <td>Address</td>
+ <td>{{Data.driver_address}}</td>
+ </tr>
+ <tr>
+        <td colspan="2" align="center">
+        <img src="{{Data.driver_photo.url}}" alt="Profile Photo" width="150" height="150">
+      
+        </td>
+     </tr>
+     <tr>
+        <td colspan="2" align="center">
+        <img src="{{Data.driver_license.url}}" alt="License Photo" width="150" height="150">
+      
+        </td>
+     </tr>
+     <td>Place</td>
+ <td>{{Data.driver_doj}}</td>
+ </tr>
+ <tr>
+ <td>District</td>
+ <td>{{Data.place.district.district_name}}</td>
+ </tr>
+ <tr>
+ <td>Place</td>
+ <td>{{Data.place.place_name}}</td>
+ </tr>
+ <tr>
+<td colspan="2" align="center">
+<a href="{% url 'Driver:EditProfile' %}">Edit Profile</a> |
+<a href="{% url 'Driver:ChangePassword' %}">Change Password</a>
+
+ 
+ </td>
+ </tr>
+ </table>
+</form>
+</body>
+</center>
+</html> -->

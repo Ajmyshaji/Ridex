@@ -1,0 +1,20 @@
+from django.urls import path
+from Driver import views
+app_name="Driver"
+urlpatterns = [
+    path('DriverHomePage/',views.DriverHomePage ,name="DriverHomePage"),
+    path('MyProfile/',views.MyProfile ,name="MyProfile"),
+    path('EditProfile/',views.EditProfile ,name="EditProfile"),
+    path('ChangePassword/',views.ChangePassword ,name="ChangePassword"),
+    path('Vehicle/',views.Vehicle ,name="Vehicle"),
+    path('Ajaxmodel/',views.Ajaxmodel,name='Ajaxmodel'),
+    path('delvehicle/<int:dvlid>',views.delvehicle,name="delvehicle"),
+    path('Requestview/',views.Requestview,name="Requestview"),
+     path('acceptbookingdata/<int:abid>/',views.acceptbookingdata,name="acceptbookingdata"),
+     path('rejectbookingdata/<int:rbid>/',views.rejectbookingdata,name="rejectbookingdata"),
+    #  path('Amount/',views.Amount ,name="Amount"),
+     path('Amount/<int:bid>/', views.Amount, name="Amount"),
+     path('Logout/',views.Logout,name="Logout"),
+
+]
+ 

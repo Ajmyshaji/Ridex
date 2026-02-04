@@ -1,0 +1,499 @@
+{% extends 'Guest/Head.html' %}
+{% block content %}
+{% load static %}
+
+<!-- Driver Registration Section -->
+<section class="login-area pt-5 pb-5" style="background: #f4f6fb;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <div class="login-box bg-white shadow-sm rounded p-4">
+
+                    <!-- Page Title -->
+                    <h2 class="text-center mb-3" style="color: #1e3a8a;">Become a <span style="color:#f97316;">RIDEX</span> Driver</h2>
+                    <p class="text-center text-muted mb-4">Smart Ride Booking Platform</p>
+
+                    <!-- Driver Registration Form -->
+                    <form action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Name -->
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" name="txt_name" class="form-control" required>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="txt_email" class="form-control" required>
+                        </div>
+
+                        <!-- Contact -->
+                        <div class="mb-3">
+                            <label class="form-label">Contact</label>
+                            <input type="text" name="txt_contact" class="form-control" required
+                                   pattern="[7-9]{1}[0-9]{9}"
+                                   title="Phone number with 7-9 and remaining 9 digits">
+                        </div>
+
+                        <!-- Address -->
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <textarea name="txt_address" class="form-control" rows="3" required></textarea>
+                        </div>
+
+                        <!-- Photo -->
+                        <div class="mb-3">
+                            <label class="form-label">Photo</label>
+                            <input type="file" name="txt_photo" class="form-control" required>
+                        </div>
+
+                        <!-- License -->
+                        <div class="mb-3">
+                            <label class="form-label">License</label>
+                            <input type="file" name="txt_license" class="form-control" required>
+                        </div>
+
+                        <!-- District -->
+                        <div class="mb-3">
+                            <label class="form-label">District</label>
+                            <select name="sel_district" id="sel_district" class="form-control" required>
+                                <option value="">--Select District--</option>
+                                {% for i in districtdata %}
+                                <option value="{{i.id}}">{{i.district_name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Place -->
+                        <div class="mb-3">
+                            <label class="form-label">Place</label>
+                            <select name="sel_place" id="sel_place" class="form-control" required>
+                                <option value="">--Select Place--</option>
+                            </select>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" name="txt_password" class="form-control" required>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="text-center mt-3">
+                            <input type="submit" value="Register Now" class="btn btn-primary w-100 mb-2" style="background:#f97316; border:none;">
+                            <a href="{% url 'Guest:DriverRegistration' %}" class="btn btn-secondary w-100" style="background:#6b7280; border:none;">Cancel</a>
+                        </div>
+
+                    </form>
+
+                    <!-- Footer Links -->
+                   
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- AJAX for Place -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $('#sel_district').change(function () {
+        var did = $(this).val();
+        var ur = "{% url 'Guest:AjaxPlace' %}";
+        $.ajax({
+            url: ur,
+            data: { did: did },
+            success: function (data) {
+                $('#sel_place').html(data);
+            }
+        });
+    });
+</script>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location="{% url 'Guest:DriverRegistration' %}";
+</script>
+{% endif %}
+
+{% endblock content %}
+<!-- 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Driver Registration | Ridex</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:#f5f7fb;
+}
+
+/* PAGE TITLE */
+.page-header{
+    text-align:center;
+    padding:40px 20px 20px;
+}
+
+.page-header h1{
+    font-size:32px;
+    font-weight:800;
+    color:#111827;
+}
+
+.page-header span{
+    color:#f97316;
+}
+
+/* CARD */
+.card-wrapper{
+    display:flex;
+    justify-content:center;
+    padding-bottom:40px;
+}
+
+.card{
+    background:#ffffff;
+    width:560px;
+    padding:40px 45px;
+    border-radius:20px;
+    box-shadow:0 25px 50px rgba(0,0,0,0.12);
+    animation:popUp 0.8s ease;
+}
+
+/* FORM TABLE */
+table{
+    width:100%;
+    border-spacing:0 18px;
+}
+
+td{
+    font-size:14px;
+    color:#374151;
+}
+
+/* INPUTS */
+input[type="text"],
+input[type="password"],
+input[type="file"],
+select,
+textarea{
+    width:100%;
+    padding:13px 14px;
+    border-radius:10px;
+    border:1px solid #e5e7eb;
+    font-size:14px;
+    background:#f9fafb;
+    transition:0.3s;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    outline:none;
+    background:#ffffff;
+    border-color:#f97316;
+    box-shadow:0 0 0 3px rgba(249,115,22,0.2);
+}
+
+textarea{
+    resize:none;
+}
+
+/* BUTTONS */
+.actions{
+    text-align:center;
+    padding-top:10px;
+}
+
+input[type="submit"]{
+    background:#f97316;
+    color:#ffffff;
+    border:none;
+    padding:13px 36px;
+    font-size:15px;
+    font-weight:700;
+    border-radius:30px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+input[type="submit"]:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 30px rgba(249,115,22,0.45);
+}
+
+input[type="button"]{
+    background:transparent;
+    border:2px solid #e5e7eb;
+    color:#374151;
+    padding:11px 30px;
+    font-size:14px;
+    font-weight:600;
+    border-radius:30px;
+    margin-left:12px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+input[type="button"]:hover{
+    border-color:#f97316;
+    color:#f97316;
+}
+
+/* ANIMATION */
+@keyframes popUp{
+    from{
+        opacity:0;
+        transform:scale(0.95);
+    }
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+    .card{
+        width:92%;
+        padding:30px 25px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page-header">
+    <h1>Become a <span>RIDEX</span> Driver</h1>
+</div>
+
+<div class="card-wrapper">
+<form action="" method="post" enctype="multipart/form-data">
+{% csrf_token %}
+
+<div class="card">
+<table>
+
+<tr>
+    <td>Name</td>
+    <td><input required type="text" name="txt_name"></td>
+</tr>
+
+<tr>
+    <td>Email</td>
+    <td><input required type="text" name="txt_email"></td>
+</tr>
+
+<tr>
+    <td>Contact</td>
+    <td>
+        <input required type="text" name="txt_contact"
+        pattern="[7-9]{1}[0-9]{9}"
+        title="Phone number with 7-9 and remaining 9 digits">
+    </td>
+</tr>
+
+<tr>
+    <td>Address</td>
+    <td><textarea required name="txt_address" rows="3"></textarea></td>
+</tr>
+
+<tr>
+    <td>Photo</td>
+    <td><input required type="file" name="txt_photo"></td>
+</tr>
+
+<tr>
+    <td>License</td>
+    <td><input required type="file" name="txt_license"></td>
+</tr>
+
+<tr>
+    <td>District</td>
+    <td>
+        <select name="sel_district" id="sel_district" required>
+            <option value="">--Select District--</option>
+            {% for i in districtdata %}
+            <option value="{{i.id}}">{{i.district_name}}</option>
+            {% endfor %}
+        </select>
+    </td>
+</tr>
+
+<tr>
+    <td>Place</td>
+    <td>
+        <select name="sel_place" id="sel_place" required>
+            <option value="">--Select Place--</option>
+        </select>
+    </td>
+</tr>
+
+<tr>
+    <td>Password</td>
+    <td><input required type="password" name="txt_password"></td>
+</tr>
+
+<tr>
+    <td colspan="2" class="actions">
+        <input type="submit" value="Register Now">
+        <a href="{% url 'Guest:DriverRegistration' %}">
+            <input type="button" value="Cancel">
+        </a>
+    </td>
+</tr>
+
+</table>
+</div>
+</form>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+$('#sel_district').change(function () {
+    var did = $(this).val();
+    var ur = "{% url 'Guest:AjaxPlace' %}";
+    $.ajax({
+        url: ur,
+        data: { did: did },
+        success: function (data) {
+            $('#sel_place').html(data);
+        }
+    });
+});
+</script>
+
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location = "{% url 'Guest:DriverRegistration' %}";
+</script>
+{% endif %}
+
+</body>
+</html>
+
+ -->
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <center>
+    <h1>DRIVER REGISTRATION</h1>
+    <br>
+    <title>Driver Registration</title>
+
+</head>
+<body>
+     <form action="" method="post" enctype="multipart/form-data">
+         {% csrf_token %}
+        <table border="1">
+            <tr>
+                <td>Name</td>
+                <td><input required type="text" name="txt_name"  id=""></td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td><input required type="text" name="txt_email"  id=""></td>
+            </tr>
+            <tr>
+                <td>Contact</td>
+                <td><input required type="text" name="txt_contact"  id="" pattern="[7-9]{1}[0-9]{9}" 
+                title="Phone number with 7-9 and remaing 9 digit with 0-9"/></td>
+            </tr>
+            <tr>
+            <td>Address</td>
+            <td><textarea required name="txt_address" rows="4" cols="30"></textarea>
+            </td>
+            </tr>
+            <tr>
+                <td>Photo</td>
+                <td><input required type="file" name="txt_photo" id=""></td>
+                
+            </tr>
+            <tr>
+                <td>License</td>
+                <td><input required type="file" name="txt_license" id=""></td>
+            </tr>
+            
+            <tr>
+                <td>District</td>
+                <td><select name="sel_district" id="sel_district" required>
+                    <option value="">--Select District--</option>
+                     {% for i in districtdata %}
+                     <option 
+                        value="{{i.id}}">{{i.district_name}}
+                    </option>
+                     {% endfor %}
+                </select></td>
+            </tr>
+             <tr>
+                <td>Place</td>
+                <td><select name="sel_place" id="sel_place" required>
+                    <option value="">--Select Place--</option>
+                    
+                </select></td>
+            </tr>
+             <tr>
+                <td>Password</td>
+                <td><input required type="password" name="txt_password"  id=""></td>
+            </tr>
+           
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" value="submit">
+                    <a href="{% url 'Guest:DriverRegistration' %}">
+                   <input type="button" value="Cancel"></a>
+                </td>
+            </tr>
+        </table>
+
+
+       
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $('#sel_district').change(function () {
+        var did = $(this).val();
+        var ur = "{% url 'Guest:AjaxPlace' %}"
+        $.ajax({
+            url: ur,
+            data: { did: did },
+            success: function (data) {
+                $('#sel_place').html(data);
+            }
+        });
+    });
+</script>
+</center>
+</html>
+{% if msg %}
+<script>alert("{{msg}}")
+     window.location="{% url 'Guest:DriverRegistration' %}"
+</script>
+{% endif %} -->

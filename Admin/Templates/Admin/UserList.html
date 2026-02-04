@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User List</title>
+</head>
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+        <h3>USER LIST</h3>
+        <table border="1">
+        <tr>
+            <td>SL.No</td>
+            <td>Name</td>
+            <td>Gender</td>
+            <td>Contact</td>
+            <td>Email</td>
+            <td>District</td>
+            <td>Place</td>
+            <td>Address</td>
+            <td>Photo</td>
+             <!-- <td colspan="2">Action</td> -->
+        </tr>
+       {% for i in userdata %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{i.user_name}}</td>
+            <td>{{i.user_gender}}</td>
+            <td>{{i.user_contact}}</td>
+            <td>{{i.user_email}}</td>
+            <td>{{i.place.district.district_name}}</td>
+            <td>{{i.place.place_name}}</td>
+            <td>{{i.user_address}}</td>
+            <td><img src="{{i.user_photo.url}}" width="100px"/></td>
+             
+        </tr>
+         {% endfor %}
+    </table>
+
+     <!-- <h3> ACCEPTED USER LIST</h3>
+        <table border="1">
+        <tr>
+            <td>SL.No</td>
+            <td>Name</td>
+            <td>Gender</td>
+            <td>Contact</td>
+            <td>Email</td>
+            <td>District</td>
+            <td>Place</td>
+            <td>Address</td>
+            <td>Photo</td>
+             <td colspan="2">Action</td>
+        </tr>
+       {% for i in acceptusertdata %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{i.user_name}}</td>
+            <td>{{i.user_gender}}</td>
+            <td>{{i.user_contact}}</td>
+            <td>{{i.user_email}}</td>
+            <td>{{i.place.district.district_name}}</td>
+            <td>{{i.place.place_name}}</td>
+            <td>{{i.user_address}}</td>
+            <td><img src="{{i.user_photo.url}}" width="100px"/></td>
+                
+            <td><a href="{% url 'Admin:rejectuser' i.id %}">Reject</a>
+                 
+                </td>
+        </tr>
+         {% endfor %}
+    </table>
+
+     <h3> REJECTED USER LIST</h3>
+        <table border="1">
+        <tr>
+            <td>SL.No</td>
+            <td>Name</td>
+            <td>Gender</td>
+            <td>Contact</td>
+            <td>Email</td>
+            <td>District</td>
+            <td>Place</td>
+            <td>Address</td>
+            <td>Photo</td>
+             <td colspan="2">Action</td>
+        </tr>
+       {% for i in rejectusertdata %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{i.user_name}}</td>
+            <td>{{i.user_gender}}</td>
+            <td>{{i.user_contact}}</td>
+            <td>{{i.user_email}}</td>
+            <td>{{i.place.district.district_name}}</td>
+            <td>{{i.place.place_name}}</td>
+            <td>{{i.user_address}}</td>
+            <td><img src="{{i.user_photo.url}}" width="100px"/></td>
+             <td>
+                <a href="{% url 'Admin:acceptuser' i.id %}">Accept</a></td>
+            -->
+        </tr>
+         {% endfor %}
+    </table>
+    </form>
+</body>
+</html>
+{% if msg %}
+<script>alert("{{msg}}")
+    window.location="{% url 'Admin:UserList' %}"
+</script>
+{% endif %}

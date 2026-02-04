@@ -1,0 +1,507 @@
+{% extends 'User/Head.html' %}
+{% block content %}
+
+<style>
+    body{
+        background:#f8fafc;
+        font-family:Segoe UI, Arial, sans-serif;
+    }
+
+    .page-container{
+        width:95%;
+        margin:35px auto;
+    }
+
+    .card{
+        background:#ffffff;
+        padding:30px;
+        border-radius:18px;
+        box-shadow:0 15px 35px rgba(0,0,0,0.12);
+        margin-bottom:35px;
+    }
+
+    /* TITLES */
+    .card-title{
+        font-size:28px;
+        font-weight:800;
+        font-style:italic;
+        color:#d4a15a;      /* RIDEX GOLD */
+        text-align:center;
+        margin-bottom:8px;
+    }
+
+    .title-line{
+        width:120px;
+        height:4px;
+        background:#d4a15a;
+        margin:0 auto 25px;
+        border-radius:4px;
+    }
+
+    /* FORM */
+    .form-row{
+        margin-bottom:18px;
+    }
+
+    label{
+        font-weight:600;
+        color:#475569;
+        display:block;
+        margin-bottom:6px;
+    }
+
+    input[type="text"]{
+        width:100%;
+        padding:12px;
+        border-radius:10px;
+        border:1px solid #cbd5e1;
+        font-size:14px;
+        background:#f8fafc;
+    }
+
+    input[type="text"]:focus{
+        outline:none;
+        border-color:#d4a15a;
+        background:#ffffff;
+    }
+
+    .submit-btn{
+        background:#d4a15a;
+        color:#ffffff;
+        padding:12px 36px;
+        border:none;
+        border-radius:30px;
+        font-size:15px;
+        font-weight:600;
+        cursor:pointer;
+        transition:0.3s;
+    }
+
+    .submit-btn:hover{
+        background:#b88945;
+        transform:translateY(-2px);
+    }
+
+    /* TABLE */
+    table{
+        width:100%;
+        border-collapse:collapse;
+    }
+
+    th{
+        background:#d4a15a;
+        color:#ffffff;
+        padding:14px;
+        font-size:13px;
+        text-transform:uppercase;
+        letter-spacing:0.4px;
+    }
+
+    td{
+        padding:14px;
+        font-size:14px;
+        color:#334155;
+        text-align:center;
+        border-bottom:1px solid #e5e7eb;
+    }
+
+    tr:hover{
+        background:#fffaf0;
+    }
+
+    /* STATUS BADGES */
+    .badge{
+        padding:6px 16px;
+        border-radius:22px;
+        font-size:12px;
+        font-weight:700;
+        color:#ffffff;
+        display:inline-block;
+        margin-bottom:6px;
+    }
+
+    .pending{
+        background:#facc15;
+        color:#000;
+    }
+
+    .replied{
+        background:#22c55e;
+    }
+
+    /* DELETE */
+    .delete-btn{
+        background:#ef4444;
+        color:#ffffff;
+        padding:7px 18px;
+        border-radius:20px;
+        font-size:13px;
+        font-weight:600;
+        text-decoration:none;
+        transition:0.3s;
+        display:inline-block;
+    }
+
+    .delete-btn:hover{
+        background:#dc2626;
+    }
+</style>
+
+<div class="page-container">
+
+    <!-- ADD COMPLAINT -->
+    <div class="card">
+        <div class="card-title">Add Complaint</div>
+        <div class="title-line"></div>
+
+        <form action="" method="post">
+            {% csrf_token %}
+
+            <div class="form-row">
+                <label>Title</label>
+                <input required type="text" name="txt_title"
+                       title="Name Allows Only Alphabets,Spaces and First Letter Must Be Capital Letter"
+                       pattern="^[A-Z]+[a-zA-Z ]*$">
+            </div>
+
+            <div class="form-row">
+                <label>Complaint Content</label>
+                <input required type="text" name="txt_content">
+            </div>
+
+            <div style="text-align:center;margin-top:20px;">
+                <input type="submit" value="Submit Complaint" class="submit-btn">
+            </div>
+        </form>
+    </div>
+
+    <!-- COMPLAINT LIST -->
+    <div class="card">
+        <div class="card-title">My Complaints</div>
+        <div class="title-line"></div>
+
+        <table>
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Date</th>
+                <th>Driver</th>
+                <th>Ride Date</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Status / Reply</th>
+                <th>Action</th>
+            </tr>
+
+            {% for i in complaintdata %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.complaint_title }}</td>
+                <td>{{ i.complaint_content }}</td>
+                <td>{{ i.complaint_date }}</td>
+                <td>{{ i.booking.vehicle.driver.driver_name }}</td>
+                <td>{{ i.booking.booking_todate }}</td>
+                <td>{{ i.booking.fromlocalplace.localplace_name }}</td>
+                <td>{{ i.booking.tolocalplace.localplace_name }}</td>
+                <td>
+                    {% if i.complaint_status == 1 %}
+                        <span class="badge replied">Replied</span><br>
+                        {{ i.complaint_reply }}
+                    {% else %}
+                        <span class="badge pending">Pending</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'User:complaintdelete' i.id %}" class="delete-btn">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location="{% url 'User:MyBooking' %}";
+</script>
+{% endif %}
+
+{% endblock content %}
+
+<!-- 
+
+<style>
+    body{
+        background:#f1f5f9;
+        font-family:Segoe UI, Arial, sans-serif;
+    }
+
+    .page-container{
+        width:95%;
+        margin:30px auto;
+    }
+
+    .card{
+        background:#ffffff;
+        padding:25px;
+        border-radius:14px;
+        box-shadow:0 10px 25px rgba(0,0,0,0.12);
+        margin-bottom:30px;
+    }
+
+    .card-title{
+        font-size:22px;
+        font-weight:700;
+        color:#0f172a;
+        margin-bottom:15px;
+        text-align:center;
+    }
+
+    .form-row{
+        margin-bottom:15px;
+    }
+
+    label{
+        font-weight:600;
+        color:#334155;
+        display:block;
+        margin-bottom:6px;
+    }
+
+    input[type="text"]{
+        width:100%;
+        padding:10px 12px;
+        border-radius:8px;
+        border:1px solid #cbd5e1;
+        font-size:14px;
+    }
+
+    input[type="submit"]{
+        background:#6366f1;
+        color:#fff;
+        padding:10px 28px;
+        border:none;
+        border-radius:30px;
+        font-size:14px;
+        font-weight:600;
+        cursor:pointer;
+    }
+
+    input[type="submit"]:hover{
+        background:#4f46e5;
+    }
+
+    table{
+        width:100%;
+        border-collapse:collapse;
+    }
+
+    th{
+        background:#0f172a;
+        color:#ffffff;
+        padding:12px;
+        font-size:13px;
+        text-transform:uppercase;
+    }
+
+    td{
+        padding:12px;
+        font-size:13px;
+        color:#334155;
+        text-align:center;
+        border-bottom:1px solid #e5e7eb;
+    }
+
+    tr:hover{
+        background:#f8fafc;
+    }
+
+    .badge{
+        padding:5px 14px;
+        border-radius:20px;
+        font-size:12px;
+        font-weight:600;
+        color:#fff;
+        display:inline-block;
+    }
+
+    .pending{ background:#f59e0b; color:#000; }
+    .replied{ background:#22c55e; }
+
+    .delete-btn{
+        color:#ef4444;
+        font-weight:600;
+        text-decoration:none;
+    }
+
+    .delete-btn:hover{
+        text-decoration:underline;
+    }
+</style>
+
+<div class="page-container">
+
+    <!-- Complaint Form 
+    <div class="card">
+        <div class="card-title">Add Complaint</div>
+
+        <form action="" method="post">
+            {% csrf_token %}
+
+            <div class="form-row">
+                <label>Title</label>
+                <input required type="text" name="txt_title"
+                title="Name Allows Only Alphabets,Spaces and First Letter Must Be Capital Letter"
+                pattern="^[A-Z]+[a-zA-Z ]*$">
+            </div>
+
+            <div class="form-row">
+                <label>Complaint Content</label>
+                <input required type="text" name="txt_content">
+            </div>
+
+            <div style="text-align:center;">
+                <input type="submit" value="Submit Complaint">
+            </div>
+        </form>
+    </div>
+
+    <!-- Complaint List 
+    <div class="card">
+        <div class="card-title">My Complaints</div>
+
+        <table>
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Complaint Date</th>
+                <th>Driver</th>
+                <th>Ride Date</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Status / Reply</th>
+                <th>Action</th>
+            </tr>
+
+            {% for i in complaintdata %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.complaint_title }}</td>
+                <td>{{ i.complaint_content }}</td>
+                <td>{{ i.complaint_date }}</td>
+                <td>{{ i.booking.vehicle.driver.driver_name }}</td>
+                <td>{{ i.booking.booking_todate }}</td>
+                <td>{{ i.booking.fromlocalplace.localplace_name }}</td>
+                <td>{{ i.booking.tolocalplace.localplace_name }}</td>
+                <td>
+                    {% if i.complaint_status == 1 %}
+                        <span class="badge replied">Replied</span><br>
+                        {{ i.complaint_reply }}
+                    {% else %}
+                        <span class="badge pending">Pending</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a class="delete-btn" href="{% url 'User:complaintdelete' i.id %}">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location="{% url 'User:MyBooking' %}";
+</script>
+{% endif %}
+
+ -->
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint</title>
+</head>
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+         <table border="1">
+            <tr>
+                <td>Title</td>
+                <td>
+                    <input required type="text" name="txt_title" id="" title="Name Allows Only Alphabets,Spaces and First Letter Must Be Capital Letter" pattern="^[A-Z]+[a-zA-Z ]*$"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Content</td>
+                <td>
+                    <input required type="text" name="txt_content" id="">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" value="submit">
+                    
+                </td>
+            </td>
+                
+            </tr>
+         </table>
+         <table border="1">
+            <tr>
+                <td>Sl.No</td>
+                <td>Title</td>
+                <td>Content</td>
+                <td>Complaint Reg Date</td>
+                <td>Driver Name</td>
+                <td>Ride Booking Date</td>
+                <td>Ride Date</td>
+                <td>From Location</td>
+                <td>To Location</td>
+                <td>Reply</td>
+                <td colspan="2" align="center">Action</td>
+            </tr>
+            {% for i in complaintdata %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.complaint_title }}</td>
+                <td>{{ i.complaint_content }}</td>
+                <td>{{ i.complaint_date }}</td>
+                <td>{{ booking.vehicle.driver.driver_name }}</td>
+                <td>{{ booking.booking_date }}</td>
+                <td>{{ booking.booking_todate }}</td>
+                <td>{{ booking.fromlocalplace.localplace_name }}</td>
+                <td>{{ booking.tolocalplace.localplace_name }}</td>
+                <td>
+                    {% if i.complaint_status == 1  %}
+                        {{i.complaint_reply }}
+                    {% else %}
+                       Not Replied
+                    {% endif %}
+            </td>
+                <td><a href="{% url 'User:complaintdelete' i.id %}">delete</a></td>
+            </tr>
+            {% endfor %}
+         </table>
+    </form>
+</body>
+</html>
+{% if msg %}
+<script>alert("{{msg}}")
+    window.location="{% url 'User:MyBooking' %}"
+</script>
+{% endif %} -->
+

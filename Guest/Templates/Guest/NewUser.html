@@ -1,0 +1,531 @@
+{% extends 'Guest/Head.html' %}
+{% block content %}
+{% load static %}
+
+<!-- Registration Page Container -->
+<div class="main-container" style="display:flex; min-height:100vh; background: #f4f6fb; justify-content:center; align-items:center; padding: 60px 0;">
+
+    <!-- Registration Card -->
+    <div class="register-box" style="background: #fff; padding: 40px; border-radius: 15px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); max-width: 700px; width: 100%;">
+        
+        <h2 style="text-align: center; color: #0f766e; margin-bottom: 25px;">User Registration</h2>
+        
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- User Name -->
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label>User Name</label>
+                <input type="text" name="txt_name" required style="width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #cbd5e1;">
+            </div>
+
+            <!-- Gender -->
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label>Gender</label>
+                <div style="display: flex; gap: 15px; margin-top: 5px;">
+                    <label><input type="radio" name="txt_gender" value="Male" required> Male</label>
+                    <label><input type="radio" name="txt_gender" value="Female"> Female</label>
+                    <label><input type="radio" name="txt_gender" value="Others"> Others</label>
+                </div>
+            </div>
+
+            <!-- Contact -->
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label>Contact</label>
+                <input type="text" name="txt_contact" required pattern="[7-9]{1}[0-9]{9}" 
+                    title="Phone number with 7-9 and remaining 9 digits with 0-9" 
+                    style="width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #cbd5e1;">
+            </div>
+
+            <!-- Email -->
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label>Email</label>
+                <input type="email" name="txt_email" required style="width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #cbd5e1;">
+            </div>
+
+            <!-- Password -->
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label>Password</label>
+                <input type="password" name="txt_password" required style="width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #cbd5e1;">
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label>Confirm Password</label>
+                <input type="password" name="txt_conpassword" required style="width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #cbd5e1;">
+            </div>
+
+            <!-- District -->
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label>District</label>
+                <select name="sel_district" id="sel_district" required style="width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                    <option value="">--Select District--</option>
+                    {% for i in districtdata %}
+                    <option value="{{ i.id }}">{{ i.district_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Place -->
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label>Place</label>
+                <select name="sel_place" id="sel_place" required style="width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                    <option value="">--Select Place--</option>
+                </select>
+            </div>
+
+            <!-- Address -->
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label>Address</label>
+                <textarea name="txt_address" rows="3" required style="width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #cbd5e1;"></textarea>
+            </div>
+
+            <!-- Photo -->
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label>Photo</label>
+                <input type="file" name="txt_photo" required style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1;">
+            </div>
+
+            <!-- Buttons -->
+            <!-- <div class="form-group" style="text-align: center; margin-top: 25px;">
+                <input type="submit" value="Submit" style="padding: 12px 35px; background: #0d9488; color: #fff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                <a href="{% url 'Guest:NewUser' %}">
+                    <input type="button" value="Cancel" style="padding: 12px 35px; background: #6b7280; color: #fff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                </a>
+            </div> -->
+ <div class="text-center mt-3">
+                            <input type="submit" value="Register" class="btn btn-primary w-100 mb-2" style="background: #0d9488; border:none;">
+                            <a href="{% url 'Guest:NewUser' %}" class="btn btn-secondary w-100" style="background: #6b7280; border:none;">Cancel</a>
+                        </div>
+        </form>
+    </div>
+</div>
+
+<!-- AJAX for Place -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $('#sel_district').change(function () {
+        var did = $(this).val();
+        var ur = "{% url 'Guest:AjaxPlace' %}";
+        $.ajax({
+            url: ur,
+            data: { did: did },
+            success: function (data) {
+                $('#sel_place').html(data);
+            }
+        });
+    });
+</script>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location="{% url 'Guest:NewUser' %}";
+</script>
+{% endif %}
+
+{% endblock content %}
+
+
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Registration | Ridex</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(135deg,#e0f2fe,#f0fdfa);
+}
+
+/* MAIN CONTAINER */
+.main-container{
+    display:flex;
+    min-height:100vh;
+    animation:fadeIn 1s ease;
+}
+
+/* LEFT SIDE IMAGE */
+.left-side{
+    width:50%;
+    background:
+        linear-gradient(rgba(13,148,136,0.35), rgba(13,148,136,0.35)),
+        url("{% static 'Main/assets/img/aboutridex.avif' %}");
+    background-size:cover;
+    background-position:center;
+    position:relative;
+}
+
+.left-side::after{
+    content:"Book Your Ride Instantly";
+    position:absolute;
+    bottom:50px;
+    left:40px;
+    color:#ffffff;
+    font-size:30px;
+    font-weight:800;
+    max-width:300px;
+}
+
+/* RIGHT SIDE */
+.right-side{
+    width:50%;
+    padding:60px 50px;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+}
+
+/* FORM CARD */
+.register-box{
+    width:100%;
+    max-width:520px;
+    background:#ffffff;
+    padding:42px;
+    border-radius:20px;
+    box-shadow:0 22px 45px rgba(0,0,0,0.15);
+    animation:slideUp 0.9s ease;
+}
+
+/* TITLE */
+.register-box h2{
+    text-align:center;
+    margin-bottom:30px;
+    font-size:26px;
+    font-weight:800;
+    color:#0f766e;
+    letter-spacing:1px;
+}
+
+/* TABLE */
+table{
+    width:100%;
+    border-spacing:0 16px;
+}
+
+td{
+    font-size:14px;
+    color:#374151;
+}
+
+/* INPUTS */
+input, select, textarea{
+    width:100%;
+    padding:13px 14px;
+    border-radius:9px;
+    border:1px solid #cbd5e1;
+    font-size:14px;
+    transition:0.3s;
+}
+
+input:focus, select:focus, textarea:focus{
+    outline:none;
+    border-color:#14b8a6;
+    box-shadow:0 0 8px rgba(20,184,166,0.35);
+}
+
+/* GENDER */
+.gender-group{
+    display:flex;
+    gap:18px;
+    align-items:center;
+}
+
+.gender-group input{
+    width:auto;
+}
+
+/* BUTTONS */
+.action-btns{
+    text-align:center;
+    padding-top:25px;
+}
+
+input[type="submit"],
+input[type="button"]{
+    background:linear-gradient(135deg,#0d9488,#14b8a6);
+    color:#ffffff;
+    border:none;
+    padding:12px 32px;
+    border-radius:12px;
+    font-weight:700;
+    cursor:pointer;
+    margin:5px;
+    transition:0.3s;
+}
+
+input[type="submit"]:hover,
+input[type="button"]:hover{
+    transform:translateY(-2px);
+    box-shadow:0 14px 30px rgba(20,184,166,0.45);
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn{
+    from{opacity:0}
+    to{opacity:1}
+}
+
+@keyframes slideUp{
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* MOBILE */
+@media(max-width:900px){
+    .main-container{
+        flex-direction:column;
+    }
+    .left-side{
+        width:100%;
+        height:35vh;
+    }
+    .left-side::after{
+        font-size:22px;
+        left:20px;
+        bottom:20px;
+    }
+    .right-side{
+        width:100%;
+        padding:30px 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="main-container">
+
+    <!-- LEFT 
+    <div class="left-side"></div>
+
+    <!-- RIGHT 
+    <div class="right-side">
+
+        <div class="register-box">
+            <h2>User Registration</h2>
+
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <table>
+
+                    <tr>
+                        <td>User Name</td>
+                        <td><input required type="text" name="txt_name"></td>
+                    </tr>
+
+                    <tr>
+                        <td>Gender</td>
+                        <td class="gender-group">
+                            <label><input type="radio" name="txt_gender" value="Male" required> Male</label>
+                            <label><input type="radio" name="txt_gender" value="Female"> Female</label>
+                            <label><input type="radio" name="txt_gender" value="Others"> Others</label>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Contact</td>
+                        <td>
+                            <input required type="text" name="txt_contact"
+                                   pattern="[7-9]{1}[0-9]{9}">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Email</td>
+                        <td><input required type="email" name="txt_email"></td>
+                    </tr>
+
+                    <tr>
+                        <td>Password</td>
+                        <td><input required type="password" name="txt_password"></td>
+                    </tr>
+
+                    <tr>
+                        <td>Confirm Password</td>
+                        <td><input required type="password" name="txt_conpassword"></td>
+                    </tr>
+
+                    <tr>
+                        <td>District</td>
+                        <td>
+                            <select name="sel_district" id="sel_district" required>
+                                <option value="">--Select District--</option>
+                                {% for i in districtdata %}
+                                <option value="{{i.id}}">{{i.district_name}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Place</td>
+                        <td>
+                            <select name="sel_place" id="sel_place" required>
+                                <option value="">--Select Place--</option>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Address</td>
+                        <td><textarea required name="txt_address" rows="3"></textarea></td>
+                    </tr>
+
+                    <tr>
+                        <td>Photo</td>
+                        <td><input required type="file" name="txt_photo"></td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2" class="action-btns">
+                            <input type="submit" value="Create Account">
+                            <a href="{% url 'Guest:NewUser' %}">
+                                <input type="button" value="Cancel">
+                            </a>
+                        </td>
+                    </tr>
+
+                </table>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+$('#sel_district').change(function () {
+    var did = $(this).val();
+    var ur = "{% url 'Guest:AjaxPlace' %}";
+    $.ajax({
+        url: ur,
+        data: { did: did },
+        success: function (data) {
+            $('#sel_place').html(data);
+        }
+    });
+});
+</script>
+
+</body>
+</html> -->
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <h1>USER REGISTRATION</h1>
+    <title>User</title>
+</head>
+<body>
+     <form action="" method="post" enctype="multipart/form-data">
+         {% csrf_token %}
+        <table border="1">
+            <tr>
+                <td>User Name</td>
+                <td><input required type="text" name="txt_name"  id=""></td>
+            </tr>
+            <tr>
+                <td>Gender</td>
+                <td>
+                    <input type="radio" required name="txt_gender" value="Male" id="" >Male
+                    <input type="radio" name="txt_gender" value="Female" id="" >Female
+                    <input type="radio" name="txt_gender" value="Others" id="" >Others
+                </td>
+            </tr>
+            <tr>
+                <td>Contact</td>
+                <td><input required type="text" name="txt_contact"  id="" pattern="[7-9]{1}[0-9]{9}" 
+                title="Phone number with 7-9 and remaing 9 digit with 0-9"/></td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td><input required type="text" name="txt_email"  id=""></td>
+            </tr>
+             <tr>
+                <td>Password</td>
+                <td><input required type="text" name="txt_password"  id=""></td>
+            </tr>
+            <tr>
+                <td>Confirm Password</td>
+                <td><input required type="text" name="txt_conpassword"  id=""></td>
+            </tr>
+            <tr>
+                <td>District</td>
+                <td><select name="sel_district" id="sel_district" required>
+                    <option value="">--Select District--</option>
+                     {% for i in districtdata %}
+                     <option 
+                        value="{{i.id}}">{{i.district_name}}
+                    </option>
+                     {% endfor %}
+                </select></td>
+            </tr>
+             <tr>
+                <td>Place</td>
+                <td><select name="sel_place" id="sel_place" required>
+                    <option value="">--Select Place--</option>
+                    
+                </select></td>
+            </tr>
+           
+    <td>Address</td>
+    <td>
+        <textarea required name="txt_address" rows="4" cols="30"></textarea>
+    </td>
+    </tr>
+            <tr>
+                <td>Photo</td>
+                <td><input required type="file" name="txt_photo" id=""></td>
+               
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" value="submit">
+                    <a href="{% url 'Guest:NewUser' %}">
+                   <input type="button" value="Cancel"></a>
+                </td>
+            </tr>
+        </table>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $('#sel_district').change(function () {
+        var did = $(this).val();
+        var ur = "{% url 'Guest:AjaxPlace' %}"
+        $.ajax({
+            url: ur,
+            data: { did: did },
+            success: function (data) {
+                $('#sel_place').html(data);
+            }
+        });
+    });
+</script>
+</html>
+{% if msg %}
+<script>alert("{{msg}}")
+     window.location="{% url 'Guest:NewUser' %}"
+</script>
+{% endif %} -->

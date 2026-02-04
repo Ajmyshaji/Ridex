@@ -1,0 +1,174 @@
+{% extends 'User/Head.html' %}
+{% block content %}
+
+<style>
+    .ridex-title {
+        font-size: 36px;
+        font-weight: 800;
+        font-style: italic;
+        color: #d4a15a;
+        /* Ridex Gold */
+    }
+
+    .ridex-line {
+        width: 180px;
+        height: 4px;
+        background: #d4a15a;
+        margin: 6px auto 10px;
+        border-radius: 4px;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h2 class="ridex-title">Available Vehicles</h2>
+        <div class="ridex-line"></div>
+        <p class="text-muted">Choose the best ride for your journey</p>
+    </div>
+    <select name="sel_type" id="sel_type">
+        <option value="">Vehicle Type</option>
+        {% for i in seltype %}
+        <option value="{{i.id}}">{{i.vehicletype_name}}</option>
+        {% endfor %}
+    </select>
+
+    <div class="row g-4" id="result">
+        <!-- vehicle -->
+        <!--        
+                <center></center>
+                <label>District</label>
+                <select name="selvehicletype" id="selvehicletype" required>
+                    <option value="">Select VehicleType</option>
+                    {% for i in vehicletypedata %}
+                    <option value="{{ i.id }}">{{ i.vehicletype_name }}</option>
+                    {% endfor %}
+                </select>
+                </center> -->
+
+        <!-- vehicle -->
+        {% for i in vehicledata %}
+        <div class="col-lg-4 col-md-6">
+
+            <div class="card shadow-sm border-0 h-100 rounded-4">
+
+                <!-- Vehicle Image -->
+                <img src="{{i.vehicle_photo.url}}" class="card-img-top rounded-top-4"
+                    style="height:200px; object-fit:cover;" alt="Vehicle Image">
+
+                <div class="card-body">
+
+                    <!-- Vehicle Name -->
+                    <h5 class="fw-bold text-dark">{{i.vehicle_name}}</h5>
+                    <p class="text-muted small">{{i.vehicle_details}}</p>
+
+                    <!-- Vehicle Info -->
+                    <ul class="list-unstyled small mb-3">
+                        <li><strong>Brand:</strong> {{i.model.brand.brand_name}}</li>
+                        <li><strong>Model:</strong> {{i.model.model_name}}</li>
+                        <li><strong>Type:</strong> {{i.vehicletype.vehicletype_name}}</li>
+                        <li><strong>Capacity:</strong> {{i.vehicle_capasity}} persons</li>
+                    </ul>
+
+                    <!-- Pricing -->
+                    <div class="bg-light p-3 rounded-3 mb-3">
+                        <div><strong>Base Price:</strong> ₹{{i.vehicle_baseprice}}</div>
+                        <div><strong>Per KM:</strong> ₹{{i.vehicle_kmprice}}</div>
+                    </div>
+
+                    <!-- Driver Info -->
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{{i.driver.driver_photo.url}}" class="rounded-circle me-3" width="50" height="50"
+                            style="object-fit:cover;">
+                        <div>
+                            <div class="fw-semibold">{{i.driver.driver_name}}</div>
+                            <small class="text-muted">{{i.driver.driver_contact}}</small>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Book Button -->
+                <div class="card-footer bg-transparent border-0 text-center pb-4">
+                    <a href="{% url 'User:Booking' i.id %}" class="btn btn-primary w-75 rounded-pill">
+                        Book Now
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $('#sel_type').change(function () {
+        var did = $(this).val();
+        var ur = "{% url 'User:Ajaxvehicletype' %}";
+        $.ajax({
+            url: ur,
+            data: { did: did },
+            success: function (data) {
+                $('#result').html(data);
+            }
+        });
+    });
+</script>
+{% endblock content %}
+
+
+
+
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle</title>
+</head>
+<body>
+     <form action="" method="post" enctype="multipart/form-data">
+         {% csrf_token %}
+         <table border="2">
+            <tr>
+                <td>Sl.No</td> 
+                <td>Vehicle Name</td>
+                <td>Details</td>
+                <td>Photo</td>
+                <td>Brand</td>
+                <td>Model</td>
+                <td>Vehicle Type</td>
+                <td>Base Price</td>
+                <td>KM Price</td>
+                <td>Capacity</td>
+                <td>Driver Name</td>
+                <td>Driver Photo</td>
+                <td>Driver Contact</td>
+                <td colspan="2">Action</td>
+            </tr>
+             {% for i in vehicledata %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{i.vehicle_name}}</td>
+                <td>{{i.vehicle_details}}</td>
+                <td><img src="{{i.vehicle_photo.url}}" width="100px"/></td>
+                <td>{{i.model.brand.brand_name}}</td> 
+                <td>{{i.model.model_name}}</td>
+                <td>{{i.vehicletype.vehicletype_name}}</td>
+                <td>{{i.vehicle_baseprice}}</td>
+                <td>{{i.vehicle_kmprice}}</td>
+                <td>{{i.vehicle_capasity}}</td>
+                <td>{{i.driver.driver_name}}</td>
+                <td><img src="{{i.driver.driver_photo.url}}" width="100px"/></td>
+                <td>{{i.driver.driver_contact}}</td>
+                <td><a href="{% url 'User:Booking' i.id %}">BookNow</a>
+            </tr>
+             {% endfor %}
+        </table>
+        </form> 
+</body>
+</html>
+
+
+  -->

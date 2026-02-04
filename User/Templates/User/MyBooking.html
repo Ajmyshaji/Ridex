@@ -1,0 +1,243 @@
+{% extends 'User/Head.html' %}
+{% block content %}
+
+<style>
+    body {
+        background: #f8fafc;
+        font-family: Segoe UI, Arial, sans-serif;
+    }
+
+    .booking-container {
+        width: 95%;
+        margin: 35px auto;
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 18px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    }
+
+    /* PAGE TITLE */
+    .page-title {
+        font-size: 34px;
+        font-weight: 800;
+        font-style: italic;
+        text-align: center;
+        color: #d4a15a;
+        /* RIDEX GOLD */
+        margin-bottom: 8px;
+    }
+
+    .title-line {
+        width: 150px;
+        height: 4px;
+        background: #d4a15a;
+        margin: 0 auto 30px;
+        border-radius: 4px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    /* TABLE HEADER */
+    th {
+        background: #d4a15a;
+        /* GOLD */
+        color: #ffffff;
+        padding: 14px;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    td {
+        padding: 14px;
+        font-size: 14px;
+        color: #334155;
+        text-align: center;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    tr:hover {
+        background: #fffaf0;
+    }
+
+    /* BADGES */
+    .badge {
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #ffffff;
+        display: inline-block;
+        min-width: 80px;
+    }
+
+    .waiting {
+        background: #facc15;
+        color: #000;
+    }
+
+    /* Yellow */
+    .accepted {
+        background: #22c55e;
+    }
+
+    /* Green */
+    .rejected {
+        background: #ef4444;
+    }
+
+    /* Red */
+    .paid {
+        background: #6366f1;
+    }
+
+    /* Purple */
+
+    /* BUTTONS */
+    .btn-link {
+        background: #d4a15a;
+        color: #ffffff;
+        padding: 7px 18px;
+        border-radius: 22px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: 0.3s;
+        display: inline-block;
+    }
+
+    .btn-link:hover {
+        background: #b88945;
+        transform: translateY(-2px);
+    }
+
+    .muted {
+        color: #94a3b8;
+        font-size: 13px;
+    }
+</style>
+
+<div class="booking-container">
+
+    <div class="page-title">My Bookings</div>
+    <div class="title-line"></div>
+
+    <table>
+        <tr>
+            <th>#</th>
+            <th>To Date</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Vehicle</th>
+            <th>Driver</th>
+            <th>Booked On</th>
+            <th>Status</th>
+            <th>User Status</th>
+            <th>Amount</th>
+            <th>Payment</th>
+            <th>Complaint</th>
+        </tr>
+
+        {% for i in bookingdata %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ i.booking_todate }}</td>
+            <td>{{ i.fromlocalplace.localplace_name }}</td>
+            <td>{{ i.tolocalplace.localplace_name }}</td>
+            <td>{{ i.vehicle.vehicle_name }}</td>
+            <td>{{ i.vehicle.driver.driver_name }}</td>
+            <td>{{ i.booking_date }}</td>
+
+            <!-- STATUS -->
+            <td>
+                {% if i.booking_status == 0 %}
+                <span class="badge waiting">Waiting</span>
+                {% elif i.booking_status == 1 %}
+                <span class="badge accepted">Driver Accepted</span>
+                {% elif i.booking_status == 2 %}
+                <span class="badge rejected">Driver Rejected</span>
+                <!-- {% elif i.booking_status == 1 and i.booking_amount %}
+                <a class="accept" href="{% url 'User:UserAccept' i.id %}">Accept</a>
+                <a class="reject" href="{% url 'User:UserReject' i.id %}">Reject</a>
+                {% elif i.booking_status == 3 %}
+                <span class="badge accepted">Accepted</span>
+                {% elif i.booking_status == 4 %}
+                <span class="badge rejected">Rejected</span>
+                {% elif i.booking_status == 5 %}
+                <span class="badge paid">Paid</span> -->
+                {% endif %}
+            </td>
+            <!-- STATUS user-->
+            <td class="action">
+                {% if i.booking_status == 0 %}
+                 <span class="badge waiting">Waiting</span>
+                {% elif i.bookinguser_status == 1 %}
+                <span class="badge accepted">Accepted</span>
+                {% elif i.bookinguser_status == 2 %}
+                <span class="badge rejected">Rejected</span>
+                {% elif i.bookinguser_status == 3 %}
+                <span class="badge paid">Paid</span>
+                {% elif i.booking_status == 1 and i.booking_amount %}
+                <a class="accept" href="{% url 'User:UserAccept' i.id %}">Accept</a>
+                <a class="reject" href="{% url 'User:UserReject' i.id %}">Reject</a>
+               
+                 {% else %}
+                <span class="muted">N/A</span>
+                {% endif %}
+            </td>
+            <!-- AMOUNT -->
+            <td>
+                {% if i.booking_amount %}
+                ₹ {{ i.booking_amount }}
+                {% else %}
+                <span class="muted">N/A</span>
+                {% endif %}
+            </td>
+
+            <!-- PAYMENT -->
+            <td>
+                {% if i.bookinguser_status == 1 %}
+                <a href="{% url 'User:Payment' i.id %}" class="btn-link">Pay Now</a>
+                {% elif i.bookinguser_status == 2 %}
+                <span class="badge rejected">Reject</span>
+                {% elif i.bookinguser_status == 3 %}
+                <span class="badge paid">Paid</span>
+                {% else %}
+                <span class="muted">N/A</span>
+                {% endif %}
+            </td>
+            
+
+            <!-- COMPLAINT -->
+             <td>
+                  
+                {% if i.bookinguser_status == 3 %}
+                <a href="{% url 'User:Complaints' i.id %}" class="btn-link">Add</a>
+                {% else %}
+                <span class="muted">N/A</span>
+                {% endif %}
+            
+                <!-- {% if i.bookinguser_status == 3 %} 
+                    {% if i.complaint_status == 0 %} 
+                        <a href="{% url 'User:Complaints' i.id %}" class="btn-link">Add Complaint</a> 
+                    {% else %} 
+                        <span class="success">Complaint Added</span> 
+                    {% endif %} 
+
+                {% else %} 
+                    <span class="muted">N/A</span> 
+                {% endif %} -->
+
+                
+            </td>
+           
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+{% endblock content %}

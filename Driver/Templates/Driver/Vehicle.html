@@ -1,0 +1,473 @@
+{% extends 'Driver/Head.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vehicle Registration</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
+
+body{
+    background:#f4f6fb;
+}
+
+/* RIDEX THEME COLOR */
+:root{
+    --ridex-gold:#C49A5A;
+}
+
+/* PAGE TITLE */
+.page-title{
+    text-align:center;
+    margin:30px 0;
+}
+
+.page-title h1{
+    font-size:32px;
+    font-weight:800;
+    font-style:italic;
+    color:var(--ridex-gold);
+}
+
+/* CARD */
+.card{
+    width:95%;
+    max-width:1100px;
+    margin:0 auto 40px;
+    background:#ffffff;
+    border-radius:18px;
+    padding:35px;
+    box-shadow:0 18px 40px rgba(0,0,0,0.12);
+    animation:fadeUp 0.6s ease;
+}
+
+/* FORM GRID */
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:18px 25px;
+}
+
+/* FORM GROUP */
+.form-group label{
+    display:block;
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:6px;
+    color:#374151;
+}
+
+.form-group input,
+.form-group select{
+    width:100%;
+    padding:12px 14px;
+    border-radius:8px;
+    border:1px solid #d1d5db;
+    font-size:14px;
+    background:#f9fafb;
+    transition:0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+    outline:none;
+    border-color:var(--ridex-gold);
+    background:#ffffff;
+    box-shadow:0 0 6px rgba(196,154,90,0.35);
+}
+
+/* FULL WIDTH */
+.full-width{
+    grid-column:1 / 3;
+}
+
+/* BUTTONS */
+.btn-group{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    margin-top:30px;
+}
+
+.submit-btn{
+    padding:13px 35px;
+    background:var(--ridex-gold);
+    color:#111;
+    border:none;
+    border-radius:30px;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.submit-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 28px rgba(196,154,90,0.45);
+}
+
+.cancel-btn{
+    padding:13px 35px;
+    background:#e5e7eb;
+    color:#1f2937;
+    border:none;
+    border-radius:30px;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+/* TABLE */
+.vehicle-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:30px;
+}
+
+.vehicle-table th{
+    background:var(--ridex-gold);
+    color:#111;
+    padding:12px;
+    font-size:14px;
+}
+
+.vehicle-table td{
+    padding:12px;
+    font-size:14px;
+    text-align:center;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.vehicle-table tr:hover{
+    background:#fdf7ed;
+}
+
+.vehicle-table img{
+    width:90px;
+    border-radius:8px;
+}
+
+/* ACTION LINK */
+.action-link{
+    color:#dc2626;
+    font-weight:600;
+    text-decoration:none;
+}
+
+.action-link:hover{
+    text-decoration:underline;
+}
+
+/* ANIMATION */
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+    .full-width{
+        grid-column:1;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page-title">
+    <h1>Vehicle Registration</h1>
+</div>
+
+<div class="card">
+
+<form action="" method="post" enctype="multipart/form-data">
+{% csrf_token %}
+
+<div class="form-grid">
+
+    <div class="form-group">
+        <label>Vehicle Name</label>
+        <input type="text" name="txt_name" required>
+    </div>
+
+    <div class="form-group">
+        <label>Details</label>
+        <input type="text" name="txt_details" required>
+    </div>
+
+    <div class="form-group">
+        <label>Vehicle Photo</label>
+        <input type="file" name="txt_photo" required>
+    </div>
+
+    <div class="form-group">
+        <label>Brand</label>
+        <select name="sel_brand" id="sel_brand" required>
+            <option value="">-- Select Brand --</option>
+            {% for i in branddata %}
+            <option value="{{i.id}}">{{i.brand_name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Model</label>
+        <select name="sel_model" id="sel_model" required>
+            <option value="">-- Select Model --</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Vehicle Type</label>
+        <select name="sel_vehicle" required>
+            <option value="">-- Select Vehicle Type --</option>
+            {% for i in vehicletypedata %}
+            <option value="{{i.id}}">{{i.vehicletype_name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Base Price</label>
+        <input type="text" name="txt_baseprice" required>
+    </div>
+
+    <div class="form-group">
+        <label>KM Price</label>
+        <input type="text" name="txt_kmprice" required>
+    </div>
+
+    <div class="form-group full-width">
+        <label>Capacity</label>
+        <input type="text" name="txt_capasity" required>
+    </div>
+
+</div>
+
+<div class="btn-group">
+    <button type="submit" class="submit-btn">Submit</button>
+    <a href="{% url 'Driver:Vehicle' %}">
+        <button type="button" class="cancel-btn">Cancel</button>
+    </a>
+</div>
+
+</form>
+
+<!-- VEHICLE LIST -->
+<table class="vehicle-table">
+    <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Details</th>
+        <th>Photo</th>
+        <th>Brand</th>
+        <th>Model</th>
+        <th>Type</th>
+        <th>Base</th>
+        <th>KM</th>
+        <th>Capacity</th>
+        <th>Action</th>
+    </tr>
+
+    {% for i in vehicledata %}
+    <tr>
+        <td>{{forloop.counter}}</td>
+        <td>{{i.vehicle_name}}</td>
+        <td>{{i.vehicle_details}}</td>
+        <td><img src="{{i.vehicle_photo.url}}"></td>
+        <td>{{i.model.brand.brand_name}}</td>
+        <td>{{i.model.model_name}}</td>
+        <td>{{i.vehicletype.vehicletype_name}}</td>
+        <td>{{i.vehicle_baseprice}}</td>
+        <td>{{i.vehicle_kmprice}}</td>
+        <td>{{i.vehicle_capasity}}</td>
+        <td>
+            <a class="action-link" href="{% url 'Driver:delvehicle' i.id %}">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+$('#sel_brand').change(function(){
+    var did = $(this).val();
+    var ur = "{% url 'Driver:Ajaxmodel' %}";
+    $.ajax({
+        url: ur,
+        data: { did: did },
+        success: function(data){
+            $('#sel_model').html(data);
+        }
+    });
+});
+</script>
+
+{% if msg %}
+<script>
+alert("{{msg}}");
+window.location="{% url 'Driver:Vehicle' %}";
+</script>
+{% endif %}
+
+</body>
+</html>
+{% endblock content %}
+
+
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle</title>
+    <center>
+    <h1>VEHICLE REGISTRATION</h1>
+</head>
+<body>
+     <form action="" method="post" enctype="multipart/form-data">
+         {% csrf_token %}
+        <table border="1">
+            <tr>
+                <td>Name</td>
+                <td><input required type="text" name="txt_name"  id="" title="Name Allows Only Alphabets,Spaces and First Letter Must Be Capital Letter" pattern="^[A-Z]+[a-zA-Z ]*$"/></td>
+            </tr>
+            <tr>
+                <td>Details</td>
+                <td><input required type="text" name="txt_details"  id=""></td>
+            </tr>
+            <tr>
+             <tr>
+                <td>Photo</td>
+                <td><input required type="file" name="txt_photo" id=""></td>
+            </tr>  
+            <tr>
+                <td>Brand</td>
+                <td><select name="sel_brand" id="sel_brand" required>
+                    <option value="">--Select Brand--</option>
+                     {% for i in branddata %}
+                     <option 
+                        value="{{i.id}}">{{i.brand_name}}
+                    </option>
+                     {% endfor %}
+                </select></td>
+            </tr>
+             <tr>
+                <td>Model</td>
+                <td><select name="sel_model" id="sel_model" required>
+                    <option value="">--Select Model--</option>
+                    
+                </select></td>
+            </tr>
+           <tr>
+                <td>Vehicle Type</td>
+                <td><select name="sel_vehicle" id="sel_vehicle" required>
+                    <option value="">--Select Vehicle--</option>
+                     {% for i in vehicletypedata %}
+                     <option 
+                         value="{{i.id}}">{{i.vehicletype_name}}
+                    </option>
+                     {% endfor %}
+                </select></td>
+            </tr>
+    
+            <tr>
+                <td>Base Price</td>
+                <td><input required type="text" name="txt_baseprice"  id=""></td>
+            </tr>
+            <tr>
+                <td>KM Price</td>
+                <td><input required type="text" name="txt_kmprice"  id=""></td>
+            </tr>
+             <tr>
+                <td>Capasity</td>
+                <td><input required type="text" name="txt_capasity"  id=""></td>
+            </tr>
+            
+            
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" value="submit">
+                    <a href="{% url 'Driver:Vehicle' %}">
+                   <input type="button" value="Cancel"></a>
+                </td>
+            </tr>
+        </table>
+
+         <br>
+         <br>
+        <table border="2">
+            <tr>
+                <td>Sl.No</td> 
+                <td>Vehicle Name</td>
+                <td>Details</td>
+                <td>Photo</td>
+                <td>Brand</td>
+                <td>Model</td>
+                <td>Vehicle Type</td>
+                <td>Base Price</td>
+                <td>KM Price</td>
+                <td>Capacity</td>
+                <td colspan="2">Action</td>
+            </tr>
+             {% for i in vehicledata %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{i.vehicle_name}}</td>
+                <td>{{i.vehicle_details}}</td>
+                <td><img src="{{i.vehicle_photo.url}}" width="100px"/></td>
+                <td>{{i.model.brand.brand_name}}</td> 
+                <td>{{i.model.model_name}}</td>
+                <td>{{i.vehicletype.vehicletype_name}}</td>
+                <td>{{i.vehicle_baseprice}}</td>
+                <td>{{i.vehicle_kmprice}}</td>
+                <td>{{i.vehicle_capasity}}</td>
+                <td><a href="{% url 'Driver:delvehicle' i.id %}">Delete</a>
+            </tr>
+             {% endfor %}
+        </table>
+        </form> 
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $('#sel_brand').change(function () {
+        var did = $(this).val();
+        var ur = "{% url 'Driver:Ajaxmodel' %}"
+        $.ajax({
+            url: ur,
+            data: { did: did },
+            success: function (data) {
+                $('#sel_model').html(data);
+            }
+        });
+    });
+</script>
+</center>
+</html>
+{% if msg %}
+<script>alert("{{msg}}")
+     window.location="{% url 'Driver:Vehicle' %}"
+</script>
+{% endif %} -->

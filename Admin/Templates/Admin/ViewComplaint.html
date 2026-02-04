@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Home Page</title>
+</head>
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+        <h3>New Complaint</h3>
+       <table border="1">
+            <tr>
+                <td>Sl.No</td>
+                <td>User Name</td>
+                <td>Email</td>
+                <td>Title</td>
+                <td>Content</td>
+                <td>Date</td>
+                <!-- <td>Reply</td> -->
+                <td colspan="2" align="center">Action</td>
+            </tr>
+            {% for i in viewcomplaintdata %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.user.user_name }}</td>
+                <td>{{ i.user.user_email }}</td>
+                <td>{{ i.complaint_title }}</td>
+                <td>{{ i.complaint_content }}</td>
+                <td>{{ i.complaint_date }}</td>
+                
+                <td><a href="{% url 'Admin:Reply' i.id %}">Reply</a></td>
+            </tr>
+            {% endfor %}
+         </table>
+
+          
+        <h3>Replied</h3>
+       <table border="1">
+            <tr>
+                <td>Sl.No</td>
+                <td>User Name</td>
+                <td>Email</td>
+                <td>Title</td>
+                <td>Content</td>
+                <td>Date</td>
+                <td>Reply</td>
+                <!-- <td colspan="2" align="center">Action</td> -->
+            </tr>
+            {% for i in replied %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.user.user_name }}</td>
+                <td>{{ i.user.user_email }}</td>
+                <td>{{ i.complaint_title }}</td>
+                <td>{{ i.complaint_content }}</td>
+                <td>{{ i.complaint_date }}</td>
+                <td>{{ i.complaint_replay }}</td>
+                
+                <!-- <td><a href="{% url 'Admin:Reply' i.id %}">Reply</a></td> -->
+            </tr>
+            {% endfor %}
+         </table>
+    </form>
+</body>
+</html>

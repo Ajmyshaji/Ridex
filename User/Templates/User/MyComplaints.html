@@ -1,0 +1,316 @@
+{% extends 'User/Head.html' %}
+{% block content %}
+
+<style>
+    body{
+        background:#f8fafc;
+        font-family:Segoe UI, Arial, sans-serif;
+    }
+
+    .complaint-container{
+        width:95%;
+        margin:35px auto;
+        background:#ffffff;
+        padding:30px;
+        border-radius:18px;
+        box-shadow:0 15px 35px rgba(0,0,0,0.12);
+    }
+
+    /* PAGE TITLE */
+    .page-title{
+        text-align:center;
+        font-size:30px;
+        font-weight:800;
+        font-style:italic;
+        color:#d4a15a;          /* RIDEX GOLD */
+        margin-bottom:8px;
+    }
+
+    .title-line{
+        width:120px;
+        height:4px;
+        background:#d4a15a;
+        margin:0 auto 30px;
+        border-radius:4px;
+    }
+
+    /* TABLE */
+    table{
+        width:100%;
+        border-collapse:collapse;
+    }
+
+    th{
+        background:#d4a15a;
+        color:#ffffff;
+        padding:14px;
+        font-size:13px;
+        text-transform:uppercase;
+        letter-spacing:0.4px;
+    }
+
+    td{
+        padding:14px;
+        font-size:14px;
+        color:#334155;
+        text-align:center;
+        border-bottom:1px solid #e5e7eb;
+    }
+
+    tr:hover{
+        background:#fffaf0;
+    }
+
+    /* STATUS BADGES */
+    .badge{
+        padding:6px 16px;
+        border-radius:22px;
+        font-size:12px;
+        font-weight:700;
+        color:#ffffff;
+        display:inline-block;
+        margin-bottom:6px;
+    }
+
+    .pending{
+        background:#facc15;
+        color:#000;
+    }
+
+    .replied{
+        background:#22c55e;
+    }
+
+    /* REPLY BOX */
+    .reply-box{
+        background:#fff7e6;
+        padding:10px 12px;
+        border-radius:10px;
+        font-size:13px;
+        color:#7c4a03;
+        margin-top:6px;
+        text-align:left;
+    }
+</style>
+
+<div class="complaint-container">
+
+    <div class="page-title">My Complaints</div>
+    <div class="title-line"></div>
+
+    <table>
+        <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Complaint</th>
+            <th>Driver</th>
+            <th>Ride Date</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Status / Reply</th>
+        </tr>
+
+        {% for i in complaintdata %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ i.complaint_title }}</td>
+            <td>{{ i.complaint_content }}</td>
+            <td>{{ i.booking.vehicle.driver.driver_name }}</td>
+            <td>{{ i.booking.booking_todate }}</td>
+            <td>{{ i.booking.fromlocalplace.localplace_name }}</td>
+            <td>{{ i.booking.tolocalplace.localplace_name }}</td>
+            <td>
+                {% if i.complaint_status == 1 %}
+                    <span class="badge replied">Replied</span>
+                    <div class="reply-box">{{ i.complaint_reply }}</div>
+                {% else %}
+                    <span class="badge pending">Pending</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location="{% url 'User:MyBooking' %}";
+</script>
+{% endif %}
+
+{% endblock content %}
+
+<!-- 
+
+<style>
+    body{
+        background:#f1f5f9;
+        font-family:Segoe UI, Arial, sans-serif;
+    }
+
+    .complaint-container{
+        width:95%;
+        margin:30px auto;
+        background:#ffffff;
+        padding:25px;
+        border-radius:14px;
+        box-shadow:0 10px 25px rgba(0,0,0,0.12);
+    }
+
+    .page-title{
+        text-align:center;
+        font-size:26px;
+        font-weight:700;
+        color:#0f172a;
+        margin-bottom:20px;
+    }
+
+    table{
+        width:100%;
+        border-collapse:collapse;
+    }
+
+    th{
+        background:#6366f1;
+        color:#ffffff;
+        padding:12px;
+        font-size:14px;
+        text-transform:uppercase;
+    }
+
+    td{
+        padding:12px;
+        font-size:14px;
+        color:#334155;
+        text-align:center;
+        border-bottom:1px solid #e5e7eb;
+    }
+
+    tr:hover{
+        background:#f8fafc;
+    }
+
+    .badge{
+        padding:5px 14px;
+        border-radius:20px;
+        font-size:12px;
+        font-weight:600;
+        color:#ffffff;
+        display:inline-block;
+    }
+
+    .pending{ background:#f59e0b; color:#000; }
+    .replied{ background:#22c55e; }
+
+    .reply-box{
+        background:#f8fafc;
+        padding:8px 12px;
+        border-radius:8px;
+        font-size:13px;
+    }
+</style>
+
+<div class="complaint-container">
+
+    <div class="page-title">My Complaints</div>
+
+    <table>
+        <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Complaint</th>
+            <th>Driver</th>
+            <th>Ride Date</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Status / Reply</th>
+        </tr>
+
+        {% for i in complaintdata %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ i.complaint_title }}</td>
+            <td>{{ i.complaint_content }}</td>
+            <td>{{ i.booking.vehicle.driver.driver_name }}</td>
+            <td>{{ i.booking.booking_todate }}</td>
+            <td>{{ i.booking.fromlocalplace.localplace_name }}</td>
+            <td>{{ i.booking.tolocalplace.localplace_name }}</td>
+            <td>
+                {% if i.complaint_status == 1 %}
+                    <span class="badge replied">Replied</span>
+                    <div class="reply-box">{{ i.complaint_reply }}</div>
+                {% else %}
+                    <span class="badge pending">Pending</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location="{% url 'User:MyBooking' %}";
+</script>
+{% endif %}
+
+ -->
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint</title>
+</head>
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+         <table border="1">
+<tr>
+    <th>Sl</th>
+    <th>Title</th>
+    <th>Content</th>
+    <th>Driver</th>
+    <th>Ride Date</th>
+    <th>From</th>
+    <th>To</th>
+    <th>Reply</th>
+</tr>
+
+{% for i in complaintdata %}
+<tr>
+    <td>{{ forloop.counter }}</td>
+    <td>{{ i.complaint_title }}</td>
+    <td>{{ i.complaint_content }}</td>
+    <td>{{ i.booking.vehicle.driver.driver_name }}</td>
+    <td>{{ i.booking.booking_todate }}</td>
+    <td>{{ i.booking.fromlocalplace.localplace_name }}</td>
+    <td>{{ i.booking.tolocalplace.localplace_name }}</td>
+    <td>
+        {% if i.complaint_status == 1 %}
+            {{ i.complaint_reply }}
+        {% else %}
+            Pending
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+    </form>
+</body>
+</html>
+{% if msg %}
+<script>alert("{{msg}}")
+    window.location="{% url 'User:MyBooking' %}"
+</script>
+{% endif %} -->
+

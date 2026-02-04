@@ -1,0 +1,286 @@
+{% extends 'Admin/Head.html' %}
+{% block content %}
+<br>
+
+<style>
+    .complaint-wrapper {
+        padding: 25px;
+        background: #f4f6f9;
+        font-family: Arial, sans-serif;
+    }
+
+    .complaint-card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+
+    .complaint-title {
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table th {
+        background: #0d6efd;
+        color: #fff;
+        padding: 10px;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    table td {
+        padding: 9px;
+        border: 1px solid #ddd;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    table tr:nth-child(even) {
+        background: #f9f9f9;
+    }
+
+    .reply-btn {
+        background: #0d6efd;
+        color: #fff;
+        padding: 6px 12px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 13px;
+    }
+
+    .reply-btn:hover {
+        background: #084298;
+        color: #fff;
+    }
+
+    .block-btn {
+        background: #dc3545;
+        color: #fff;
+        padding: 6px 12px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 13px;
+    }
+
+    .block-btn:hover {
+        background: #b02a37;
+        color: #fff;
+    }
+
+    .reply-text {
+        background: #198754;
+        color: #fff;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 13px;
+        display: inline-block;
+    }
+</style>
+
+<div class="complaint-wrapper">
+
+    <!-- PENDING COMPLAINTS -->
+    <div class="complaint-card">
+        <div class="complaint-title">Complaint List</div>
+
+        <table>
+            <tr>
+                <th>Sl.No</th>
+                <th>User</th>
+                <th>Driver</th>
+                <th>Booking Date</th>
+                <th>Ride Date</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+
+            {% for i in complaintdata %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.user.user_name }}</td>
+                <td>{{ i.booking.vehicle.driver.driver_name }}</td>
+                <td>{{ i.booking.booking_date }}</td>
+                <td>{{ i.booking.booking_todate }}</td>
+                <td>{{ i.booking.fromlocalplace.localplace_name }}</td>
+                <td>{{ i.booking.tolocalplace.localplace_name }}</td>
+                <td>{{ i.complaint_title }}</td>
+                <td>{{ i.complaint_content }}</td>
+                <td>{{ i.complaint_date }}</td>
+                <td>
+                    <a href="{% url 'Admin:Reply' i.id %}" class="reply-btn">Reply</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="11">No complaints found</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <!-- REPLIED COMPLAINTS -->
+    <div class="complaint-card">
+        <div class="complaint-title">Replied Complaints</div>
+
+        <table>
+            <tr>
+                <th>Sl.No</th>
+                <th>User</th>
+                <th>Driver</th>
+                <th>Booking Date</th>
+                <th>Ride Date</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Date</th>
+                <th>Reply</th>
+                <th>Action</th>
+            </tr>
+
+            {% for i in replied %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.user.user_name }}</td>
+                <td>{{ i.booking.vehicle.driver.driver_name }}</td>
+                <td>{{ i.booking.booking_date }}</td>
+                <td>{{ i.booking.booking_todate }}</td>
+                <td>{{ i.booking.fromlocalplace.localplace_name }}</td>
+                <td>{{ i.booking.tolocalplace.localplace_name }}</td>
+                <td>{{ i.complaint_title }}</td>
+                <td>{{ i.complaint_content }}</td>
+                <td>{{ i.complaint_date }}</td>
+
+                <!-- SHOW REPLY -->
+                <td>
+                    {% if i.complaint_status == 2 %}
+                        <span class="reply-text">{{ i.complaint_reply }}</span>
+                    {% endif %}
+                </td>
+
+                <!-- BLOCK BUTTON ONLY IF DRIVER STATUS = 3 -->
+                <td>
+                    {% if i.booking.vehicle.driver.driver_status == 3 %}
+                        <a href="{% url 'Admin:blockdriver' i.booking.vehicle.driver.id %}" 
+                           class="block-btn">
+                           Block
+                        </a>
+                    {% else %}
+                        <span style="color:gray;">N/A</span>
+                    {% endif %}
+                </td>
+
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="12">No replied complaints</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+
+{% endblock content %}
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>ViewComplaints</title>
+</head>
+<body>
+<form action="" method="post">
+{% csrf_token %}
+<h2>Complaint List</h2>
+
+<table border="1" cellpadding="8">
+    <tr>
+        <th>Sl.No</th>
+        <th>User Name</th>
+        <th>Driver Name</th>
+        <th>Ride Booking Date</th>
+        <th>Ride Date</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Title</th>
+        <th>Content</th>
+        <th>Complaint Date</th>
+        <th>Reply</th>
+        
+    </tr>
+
+    {% for i in complaintdata %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ i.user.user_name }}</td>
+        <td>{{ i.booking.vehicle.driver.driver_name }}</td>
+        <td>{{ i.booking.booking_date }}</td>
+        <td>{{ i.booking.booking_todate }}</td>
+        <td>{{ i.booking.fromlocalplace.localplace_name }}</td>
+        <td>{{ i.booking.tolocalplace.localplace_name }}</td>
+        <td>{{ i.complaint_title }}</td>
+        <td>{{ i.complaint_content }}</td>
+        <td>{{ i.complaint_date }}</td>
+        <td><a href="{% url 'Admin:Reply' i.id %}">Reply</a></td>
+       
+    </tr>
+    {% endfor %}
+</table>
+<br>
+<h3>Replied</h3>
+       <table border="1">
+            <tr>
+        <th>Sl.No</th>
+        <th>User Name</th>
+        <th>Driver Name</th>
+        <th>Ride Booking Date</th>
+        <th>Ride Date</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Title</th>
+        <th>Content</th>
+        <th>Complaint Date</th>
+        <th>Reply</th>
+                
+            </tr>
+            {% for i in replied %}
+            <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ i.user.user_name }}</td>
+        <td>{{ i.booking.vehicle.driver.driver_name }}</td>
+        <td>{{ i.booking.booking_date }}</td>
+        <td>{{ i.booking.booking_todate }}</td>
+        <td>{{ i.booking.fromlocalplace.localplace_name }}</td>
+        <td>{{ i.booking.tolocalplace.localplace_name }}</td>
+        <td>{{ i.complaint_title }}</td>
+        <td>{{ i.complaint_content }}</td>
+        <td>{{ i.complaint_date }}</td>
+       
+        <td>
+            {% if i.complaint_status == 1 %}
+                {{ i.complaint_reply }}
+            {% endif %}
+        </td>
+                
+                
+            </tr>
+            {% endfor %}
+         </table>
+
+</body>
+</html>
+<br> -->
+

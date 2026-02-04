@@ -1,0 +1,401 @@
+{% extends 'Driver/Head.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Requests</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: #f4f6fb;
+        }
+
+        /* RIDEX THEME */
+        :root {
+            --ridex-gold: #C49A5A;
+        }
+
+        /* PAGE TITLE */
+        .page-title {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .page-title h1 {
+            font-size: 32px;
+            font-weight: 800;
+            font-style: italic;
+            color: var(--ridex-gold);
+        }
+
+        /* CARD */
+        .card {
+            width: 96%;
+            margin: 0 auto 40px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+            animation: fadeUp 0.6s ease;
+        }
+
+        /* TABLE */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1100px;
+        }
+
+        th {
+            background: var(--ridex-gold);
+            color: #111;
+            padding: 12px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        td {
+            padding: 12px;
+            font-size: 14px;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tr:hover {
+            background: #fdf7ed;
+        }
+
+        /* STATUS BADGES */
+        .badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .pending {
+            background: #fde68a;
+            color: #92400e;
+        }
+
+        .accepted {
+            background: #bbf7d0;
+            color: #166534;
+        }
+
+        .rejected {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .paid {
+            background: #bfdbfe;
+            color: #1e40af;
+        }
+
+        /* ACTION LINKS */
+        .action a,
+        .amount-btn {
+            padding: 7px 16px;
+            margin: 3px;
+            border-radius: 22px;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.3s;
+        }
+
+        /* ACCEPT / REJECT */
+        .accept {
+            background: #22c55e;
+            color: #ffffff;
+        }
+
+        .accept:hover {
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.45);
+            transform: translateY(-1px);
+        }
+
+        .reject {
+            background: #ef4444;
+            color: #ffffff;
+        }
+
+        .reject:hover {
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.45);
+            transform: translateY(-1px);
+        }
+
+        /* ADD AMOUNT FEATURE */
+        .amount-btn {
+            background: var(--ridex-gold);
+            color: #111;
+        }
+
+        .amount-btn:hover {
+            box-shadow: 0 8px 22px rgba(196, 154, 90, 0.55);
+            transform: translateY(-1px);
+        }
+
+        /* ANIMATION */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-title">
+        <h1>Booking Requests</h1>
+    </div>
+
+    <div class="card">
+        <div class="table-wrapper">
+
+            <table>
+                <tr>
+                    <th>#</th>
+                    <th>To Date</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Vehicle</th>
+                    <th>User</th>
+                    <th>Contact</th>
+                    <th>Email</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>User Status</th>
+                    <th>Payment</th>
+                    <th>Amount</th>
+                </tr>
+
+                {% for i in bookingdata %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{i.booking_todate}}</td>
+                    <td>{{i.fromlocalplace.localplace_name}}</td>
+                    <td>{{i.tolocalplace.localplace_name}}</td>
+                    <td>{{i.vehicle.vehicle_name}}</td>
+                    <td>{{i.user.user_name}}</td>
+                    <td>{{i.user.user_contact}}</td>
+                    <td>{{i.user.user_email}}</td>
+                    <td>{{i.booking_date}}</td>
+
+                    <!-- STATUS -->
+                    <td class="action">
+                        {% if i.booking_status == 0 %}
+                        <a class="accept" href="{% url 'Driver:acceptbookingdata' i.id %}">Accept</a>
+                        <a class="reject" href="{% url 'Driver:rejectbookingdata' i.id %}">Reject</a>
+                        {% elif i.booking_status == 1 %}
+                        <span class="badge accepted">Accepted</span>
+                        {% elif i.booking_status == 2 %}
+                        <span class="badge rejected">Rejected</span>
+                        {% endif %}
+                    </td>
+                     <!-- STATUS user-->
+                      <!-- USER STATUS -->
+<td class="action">
+    {% if i.booking_status == 1 %}
+        {% if i.bookinguser_status == 0 %}
+            <span class="badge accepted">Waiting</span>
+        {% elif i.bookinguser_status == 1 %}
+            <span class="badge accepted">Accepted</span>
+        {% elif i.bookinguser_status == 2 %}
+            <span class="badge rejected">Rejected</span>
+        {% elif i.bookinguser_status == 3 %}
+            <span class="badge paid">Paid</span>
+        {% endif %}
+     {% elif i.booking_status == 2 %}
+         -
+    {% else %}
+        <span class="badge waiting">-</span>
+    {% endif %}
+</td>
+            
+                     <!-- PAYMENT -->
+<td>
+    {% if i.booking_status == 1 and i.bookinguser_status == 3 %}
+        <span class="badge paid">Paid</span>
+    {% else %}
+        -
+    {% endif %}
+</td>
+                    <!-- <td>
+                        {% if i.bookinguser_status == 0 %}
+                        <span class="badge pending">Waiting</span>
+
+                        {% elif i.booking_status == 1 %}
+                        {% if i.booking_amount %}
+                        <span class="badge pending">Waiting for Payment</span>
+                        {% else %}
+                        <a class="amount-btn" href="{% url 'Driver:Amount' i.id %}">
+                            Add Amount
+                        </a>
+                        {% endif %}
+
+                        {% elif i.booking_status == 2 %}
+                        <span class="badge rejected">Rejected</span>
+
+                        {% elif i.bookinguser_status == 3 %}
+                        <span class="badge paid">Paid</span>
+                        {% endif %}
+                    </td>
+ -->
+
+                    <!-- AMOUNT -->
+                     <!-- AMOUNT -->
+<td>
+    {% if i.booking_status == 1 %}
+        {% if i.booking_amount %}
+            ₹ {{ i.booking_amount }}
+        {% else %}
+            <a class="amount-btn" href="{% url 'Driver:Amount' i.id %}">
+                Add Amount
+            </a>
+        {% endif %}
+
+    {% elif i.booking_status == 0 %}
+        <span class="badge pending">Waiting</span>
+
+    {% elif i.booking_status == 2 %}
+        <span class="badge rejected">Rejected</span>
+    {% endif %}
+</td>
+                    <!-- <td>
+                        {% if i.booking_status == 1 or i.bookinguser_status == 3 %}
+                        ₹ {{i.booking_amount}}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td> -->
+                </tr>
+                {% endfor %}
+            </table>
+
+        </div>
+    </div>
+
+    {% if msg %}
+    <script>
+        alert("{{msg}}");
+        window.location = "{% url 'Driver:Requestview' %}";
+    </script>
+    {% endif %}
+
+</body>
+
+</html>
+{% endblock content %}
+
+
+
+<!-- 
+<!DOCTYPE html>
+<html>
+    <center>
+<head>
+    <title>Booking Requests</title>
+    <h1>REQUEST VIEW</h1>
+</head>
+<body>
+<table border="1">
+    <tr>
+        <th>Sl.No</th>
+        <th>To Date</th>
+        <th>From Place</th>
+        <th>To Place</th>
+        <th>Vehicle</th>
+        <th>User</th>
+        <th>User Contact</th>
+        <th>User Email</th>
+        <th>Date</th>
+        <th colspan="2" >Action</th>
+<th>Action</th>
+<th>Payment</th>
+<th>Amount</th>
+</tr>
+
+{% for i in bookingdata %}
+<tr>
+    <td>{{ forloop.counter }}</td>
+    <td>{{ i.booking_todate }}</td>
+    <td>{{ i.fromlocalplace.localplace_name }}</td>
+    <td>{{ i.tolocalplace.localplace_name }}</td>
+    <td>{{ i.vehicle.vehicle_name }}</td>
+    <td>{{ i.user.user_name }}</td>
+    <td>{{ i.user.user_contact }}</td>
+    <td>{{ i.user.user_email }}</td>
+    <td>{{ i.booking_date }}</td>
+    <td>{% if i.booking_status == 0 %}
+        <a href="{% url 'Driver:acceptbookingdata' i.id %}">Accept</a>
+        <a href="{% url 'Driver:rejectbookingdata' i.id %}">Reject</a>
+        {% elif i.booking_status == 1%} ACCEPTED
+        {% elif i.booking_status == 2%} REJECTED
+        {% elif i.booking_status == 3%} PAID
+        {% endif %}
+    </td>
+
+
+    <td>{% if i.booking_status == 0 %}
+        Waiting
+        {% elif i.booking_status == 1%}
+        <a href="{% url 'Driver:Amount' i.id %}">Add Amount</a>
+        {% elif i.booking_status == 2%}
+        Rejected
+        {% elif i.booking_status == 3%}
+        Paid
+        {% endif %}
+    </td>
+
+    <td>
+        {% if i.booking_status == 0 %}
+        Waiting
+        {% elif i.booking_status == 1 %}
+        {{i.booking_amount }}
+        {% elif i.booking_status == 3 %}
+        {{i.booking_amount }}
+        {% else %}
+        Rejected
+        {% endif %}
+    </td>
+
+
+
+</tr>
+{% endfor %}
+</table>
+</body>
+</center>
+
+</html>
+{% if msg %}
+<script>alert("{{msg}}")
+    window.location = "{% url 'Driver:Requestview' %}"
+</script>
+{% endif %} -->

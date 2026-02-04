@@ -1,0 +1,161 @@
+{% extends 'Driver/Head.html' %}
+{% block content %}
+
+<style>
+    body{
+        background:#f1f5f9;
+        font-family:Segoe UI, Arial, sans-serif;
+    }
+
+    :root{
+        --ridex-gold:#C49A5A;
+    }
+
+    .page-container{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        min-height:70vh;
+    }
+
+    .amount-card{
+        width:420px;
+        background:#ffffff;
+        padding:32px;
+        border-radius:18px;
+        box-shadow:0 14px 32px rgba(0,0,0,0.15);
+    }
+
+    /* TITLE */
+    .card-title{
+        text-align:center;
+        font-size:24px;
+        font-weight:800;
+        font-style:italic;
+        color:var(--ridex-gold);
+        margin-bottom:22px;
+    }
+
+    label{
+        font-weight:600;
+        color:#334155;
+        display:block;
+        margin-bottom:8px;
+    }
+
+    input[type="text"]{
+        width:100%;
+        padding:12px 14px;
+        border-radius:12px;
+        border:1px solid #cbd5e1;
+        font-size:14px;
+        margin-bottom:22px;
+        background:#f9fafb;
+        transition:0.3s;
+    }
+
+    input[type="text"]:focus{
+        outline:none;
+        border-color:var(--ridex-gold);
+        box-shadow:0 0 6px rgba(196,154,90,0.45);
+        background:#ffffff;
+    }
+
+    .btn-group{
+        display:flex;
+        justify-content:center;
+        gap:20px;
+        margin-top:10px;
+    }
+
+    /* SUBMIT */
+    .btn-submit{
+        background:var(--ridex-gold);
+        color:#111;
+        padding:11px 32px;
+        border:none;
+        border-radius:30px;
+        font-size:14px;
+        font-weight:700;
+        cursor:pointer;
+        transition:0.3s;
+    }
+
+    .btn-submit:hover{
+        transform:translateY(-1px);
+        box-shadow:0 10px 24px rgba(196,154,90,0.55);
+    }
+
+    /* CANCEL */
+    .btn-cancel{
+        background:#e5e7eb;
+        color:#1f2937;
+        padding:11px 32px;
+        border-radius:30px;
+        font-size:14px;
+        font-weight:700;
+        text-decoration:none;
+        display:inline-block;
+        transition:0.3s;
+    }
+
+    .btn-cancel:hover{
+        background:#d1d5db;
+    }
+</style>
+
+<div class="page-container">
+    <div class="amount-card">
+
+        <div class="card-title">Add Ride Amount</div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <label>Enter Amount</label>
+            <input required type="text" name="txt_amount" placeholder="Enter total ride amount">
+
+            <div class="btn-group">
+                <input type="submit" value="Submit" class="btn-submit">
+                <a href="{% url 'Driver:Requestview' %}" class="btn-cancel">Cancel</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+{% endblock content %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Amount</title>
+</head>
+<body>
+    <form method="post">
+    {% csrf_token %}
+    <table border="1">
+        <tr>
+            <td>Amount</td>
+            <td>
+                <input required type="text" name="txt_amount">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <input type="submit" value="Submit">
+                <a href="{% url 'Driver:Requestview' %}">
+                    <input type="button" value="Cancel">
+                </a>
+            </td>
+        </tr>
+    </table>
+</form>
+
+</body>
+</html>
+
+-->
