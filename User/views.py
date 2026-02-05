@@ -142,8 +142,7 @@ def Payment(request, bid):
             bookingdata.save()
             return render(request, "User/Payment.html", {'msg': 'Payment Successful'})
         else:
-            return render(request, "User/Payment.html", {'bookingdata': bookingdata})
-      
+            return render(request, "User/Payment.html", {'bookingdata': bookingdata})   
 def Complaints(request, bid):
     if "uid" not in request.session:
         return redirect("Guest:Login")
