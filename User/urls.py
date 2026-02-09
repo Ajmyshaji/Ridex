@@ -14,6 +14,7 @@ urlpatterns = [
     path('Booking/<int:vid>',views.Booking ,name="Booking"),
     path('Ajaxlocalplace/',views.Ajaxlocalplace,name='Ajaxlocalplace'),
     path('MyBooking/',views.MyBooking,name='MyBooking'),
+    path('ajaxbookingtype/',views.ajaxbookingtype,name="ajaxbookingtype"),
     path('Payment/<int:bid>/', views.Payment, name='Payment'),
     path('Complaints/<int:bid>/', views.Complaints, name="Complaints"),
     path('MyComplaints/', views.MyComplaints, name="MyComplaints"),

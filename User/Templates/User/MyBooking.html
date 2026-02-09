@@ -209,29 +209,10 @@
                 <span class="muted">N/A</span>
                 {% endif %}
             </td>
-            <!-- COMPLAINT 
-            <td>
-                {% if i.bookinguser_status == 3 %}
-                    
-                    {% if i.complaint_status == 0 %}
-                        <a href="{% url 'User:Complaints' i.id %}" class="btn-link">Add Complaint</a>
-                    
-                    {% elif i.complaint_status == 1 %}
-                        <span class="badge accepted">Complaint Added</span>
-                    
-                    {% elif i.complaint_status == 3 %}
-                        <span class="badge paid">Admin Replied</span>
-                    
-                    {% else %}
-                        <span class="muted">N/A</span>
-                    {% endif %}
-                
-                {% else %}
-                    <span class="muted">N/A</span>
-                {% endif %}
-            </td>-->
+           
+
             <!-- COMPLAINT -->
-             <td>
+            <td>
                   
                 {% if i.bookinguser_status == 3 %}
                 <a href="{% url 'User:Complaints' i.id %}" class="btn-link">Add</a>
@@ -239,7 +220,9 @@
                 <span class="muted">N/A</span>
                 {% endif %}
             </td>
-           
+         
+
+
         </tr>
         {% endfor %}
     </table>

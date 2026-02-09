@@ -3,6 +3,7 @@ from Admin.models import *
 from Guest.models import *
 from Driver.models import *
 # Create your models here.
+
 class tbl_vehicle(models.Model):
     vehicle_name=models.CharField(max_length=50)
     vehicle_details=models.CharField(max_length=30)

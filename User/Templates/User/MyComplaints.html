@@ -120,7 +120,7 @@
             <td>{{ i.booking.fromlocalplace.localplace_name }}</td>
             <td>{{ i.booking.tolocalplace.localplace_name }}</td>
             <td>
-                {% if i.complaint_status == 1 %}
+                {% if i.complaint_status == 2 %}
                     <span class="badge replied">Replied</span>
                     <div class="reply-box">{{ i.complaint_reply }}</div>
                 {% else %}

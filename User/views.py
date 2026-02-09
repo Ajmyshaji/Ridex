@@ -3,6 +3,8 @@ from Admin.models import *
 from Driver.models import *
 from User.models import *
 from Guest.models import *
+from datetime import datetime
+
 # Create your views here.
 def Profile(request):
     if "uid" not in request.session:
@@ -97,31 +99,117 @@ def Ajaxvehicletype(request):
     vehicledata=tbl_vehicle.objects.filter(vehicletype=tid)
     return render(request,'User/Ajaxvehicletype.html',{'data':vehicledata})
 
-def Booking(request,vid):
+# def Booking(request,vid):
+#     if "uid" not in request.session:
+#         return redirect("Guest:Login")
+#     else:
+#         userdata=tbl_user.objects.get(id=request.session['uid'])
+#         districtdata=tbl_district.objects.all()
+#         placedata=tbl_place.objects.all()
+#         localplacedata=tbl_localplace.objects.all()
+#         bookingdata=tbl_booking.objects.all()
+#         vechicledata=tbl_vehicle.objects.all()
+#         if request.method=="POST":
+#             fromdate=request.POST.get("txt_fromdate")
+#             date=request.POST.get("txt_todate")
+#             fromlocalplace=tbl_localplace.objects.get(id=request.POST.get("from_localplace"))
+#             tolocalplace=tbl_localplace.objects.get(id=request.POST.get("to_localplace"))
+#             vechicledata=tbl_vehicle.objects.get(id=vid)
+#             tbl_booking.objects.create(booking_fromdate=fromdate,booking_todate=date,fromlocalplace=fromlocalplace,tolocalplace=tolocalplace,user=userdata,vehicle=vechicledata)
+#             return render(request,"User/Booking.html",{'msg':"Data Inserted"})
+#         else:
+#             return render(request,"User/Booking.html",{'districtdata':districtdata,'placedata':placedata,'localplacedata':localplacedata,'bookingdata':bookingdata,'vehicledata':vechicledata})
+
+def Booking(request, vid):
     if "uid" not in request.session:
         return redirect("Guest:Login")
     else:
-        userdata=tbl_user.objects.get(id=request.session['uid'])
-        districtdata=tbl_district.objects.all()
-        placedata=tbl_place.objects.all()
-        localplacedata=tbl_localplace.objects.all()
-        bookingdata=tbl_booking.objects.all()
-        vechicledata=tbl_vehicle.objects.all()
-        if request.method=="POST":
-            date=request.POST.get("txt_todate")
-            # place=tbl_place.objects.get(id=request.POST.get("sel_place"))
-            fromlocalplace=tbl_localplace.objects.get(id=request.POST.get("from_localplace"))
-            tolocalplace=tbl_localplace.objects.get(id=request.POST.get("to_localplace"))
-            vechicledata=tbl_vehicle.objects.get(id=vid)
-            tbl_booking.objects.create(booking_todate=date,fromlocalplace=fromlocalplace,tolocalplace=tolocalplace,user=userdata,vehicle=vechicledata)
-            return render(request,"User/Booking.html",{'msg':"Data Inserted"})
+        userdata = tbl_user.objects.get(id=request.session['uid'])
+        # districtdata = tbl_district.objects.all()
+        # placedata = tbl_place.objects.all()
+        # localplacedata = tbl_localplace.objects.all()
+        bookingdata = tbl_booking.objects.all()
+        vehicledata = tbl_vehicle.objects.all()
+
+        if request.method == "POST":
+
+            booktype = request.POST.get("sel_booktype")
+            fromdate = request.POST.get("txt_fromdate")
+            todate = request.POST.get("txt_todate")
+
+            # fromlocalplace = tbl_localplace.objects.get(
+            #     id=request.POST.get("from_localplace")
+            # )
+            # tolocalplace = tbl_localplace.objects.get(
+            #     id=request.POST.get("to_localplace")
+            # )
+
+            vehicle = tbl_vehicle.objects.get(id=vid)
+
+            # Convert to date object
+            from_date_obj = datetime.strptime(fromdate, "%Y-%m-%d").date()
+
+            if booktype == "single":
+                booking_fromdate = from_date_obj
+                booking_todate = from_date_obj
+                total_days = 1
+            else:
+                to_date_obj = datetime.strptime(todate, "%Y-%m-%d").date()
+                booking_fromdate = from_date_obj
+                booking_todate = to_date_obj
+                total_days = (to_date_obj - from_date_obj).days + 1
+
+            # Prevent wrong date
+            if total_days <= 0:
+                return render(request, "User/Booking.html", {
+                    'msg': "Invalid Date Selection"
+                })
+
+            # Calculate Total Amount
+            distance = float(request.POST.get("distance_km"))
+            total_amount = (total_days * vehicle.vehicle_baseprice) + (distance * vehicle.vehicle_kmprice)
+            print(total_amount)
+
+            # Calculate Advance Price
+            advance = total_amount * 0.20
+            balance = int(total_amount - advance)
+
+            tbl_booking.objects.create(
+                booking_fromdate=booking_fromdate,
+                booking_todate=booking_todate,
+                booking_amount=total_amount,
+                booking_advance=advance,
+                booking_days=total_days,
+                booking_distance=distance,
+                # fromlocalplace=fromlocalplace,
+                # tolocalplace=tolocalplace,
+                user=userdata,
+                vehicle=vehicle
+            )
+
+            return render(request, "User/Payment.html", {
+                'msg': f"Booking Successful! Total Amount: ₹{total_amount}"
+            })
+
         else:
-            return render(request,"User/Booking.html",{'districtdata':districtdata,'placedata':placedata,'localplacedata':localplacedata,'bookingdata':bookingdata,'vehicledata':vechicledata})
+            return render(request, "User/Booking.html", {
+                # 'districtdata': districtdata,
+                # 'placedata': placedata,
+                # 'localplacedata': localplacedata,
+                'bookingdata': bookingdata,
+                'vehicledata': vehicledata
+            })
+
+
+
+def ajaxbookingtype(request):
+    return render(request,'User/ajaxbookingtype.html')
 
 def Ajaxlocalplace(request):
     place_id = request.GET.get('did')
     localplacedata = tbl_localplace.objects.filter(place_id=place_id)
     return render(request, "User/Ajaxlocalplace.html", {'localplacedata': localplacedata})
+
 def MyBooking(request):
     if "uid" not in request.session:
         return redirect("Guest:Login")
@@ -143,6 +231,24 @@ def Payment(request, bid):
             return render(request, "User/Payment.html", {'msg': 'Payment Successful'})
         else:
             return render(request, "User/Payment.html", {'bookingdata': bookingdata})   
+        
+# def Complaints(request, bid):
+#     if "uid" not in request.session:
+#         return redirect("Guest:Login")
+#     else:
+#         userdata = tbl_user.objects.get(id=request.session['uid'])
+#         booking = tbl_booking.objects.get(id=bid, user=userdata)
+#         complaintdata = tbl_complaints.objects.filter(user=userdata,booking=booking)
+#         if request.method == "POST":
+#             title = request.POST.get("txt_title")
+#             content = request.POST.get("txt_content")
+#             tbl_complaints.objects.create(complaint_title=title,complaint_content=content,user=userdata,booking=booking)
+#             complaintdata.complaint_status = 1
+#             complaintdata.save()
+#             return render(request,"User/Complaints.html",{'msg': "Complaint submitted successfully",'booking': booking,'complaintdata': complaintdata})
+#         else:
+#             return render(request,"User/Complaints.html",{'booking': booking,'complaintdata': complaintdata})
+
 def Complaints(request, bid):
     if "uid" not in request.session:
         return redirect("Guest:Login")
@@ -181,4 +287,5 @@ def UserReject(request,rubid):
     booking.bookinguser_status = 2
     booking.save()
     return redirect('User:MyBooking')
+
 
