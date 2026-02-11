@@ -191,16 +191,16 @@
                     <th>Date</th>
                     <th>Status</th>
                     <th>User Status</th>
-                    <th>Payment</th>
                     <th>Amount</th>
+                    <th>Payment</th>
                 </tr>
 
                 {% for i in bookingdata %}
                 <tr>
                     <td>{{forloop.counter}}</td>
                     <td>{{i.booking_todate}}</td>
-                    <td>{{i.fromlocalplace.localplace_name}}</td>
-                    <td>{{i.tolocalplace.localplace_name}}</td>
+                    <td>{{i.booking_fromplace}}</td>
+                    <td>{{i.booking_toplace}}</td>
                     <td>{{i.vehicle.vehicle_name}}</td>
                     <td>{{i.user.user_name}}</td>
                     <td>{{i.user.user_contact}}</td>
@@ -218,34 +218,32 @@
                         <span class="badge rejected">Rejected</span>
                         {% endif %}
                     </td>
-                     <!-- STATUS user-->
-                      <!-- USER STATUS -->
-<td class="action">
-    {% if i.booking_status == 1 %}
-        {% if i.bookinguser_status == 0 %}
-            <span class="badge accepted">Waiting</span>
-        {% elif i.bookinguser_status == 1 %}
-            <span class="badge accepted">Accepted</span>
-        {% elif i.bookinguser_status == 2 %}
-            <span class="badge rejected">Rejected</span>
-        {% elif i.bookinguser_status == 3 %}
-            <span class="badge paid">Paid</span>
-        {% endif %}
-     {% elif i.booking_status == 2 %}
-         -
-    {% else %}
-        <span class="badge waiting">-</span>
-    {% endif %}
-</td>
-            
-                     <!-- PAYMENT -->
-<td>
-    {% if i.booking_status == 1 and i.bookinguser_status == 3 %}
-        <span class="badge paid">Paid</span>
-    {% else %}
-        -
-    {% endif %}
-</td>
+                    <!-- STATUS user-->
+                    <!-- USER STATUS -->
+                    <td class="action">
+                        {% if i.booking_status == 1 %}
+                        {% if i.bookinguser_status == 0 %}
+                        <span class="badge accepted">Waiting</span>
+                        {% elif i.bookinguser_status == 1 %}
+                        <span class="badge accepted">Accepted</span>
+                        {% elif i.bookinguser_status == 2 %}
+                        <span class="badge rejected">Rejected</span>
+                        {% elif i.bookinguser_status == 3 %}
+                        <span class="badge paid">Advance Paid</span>
+                        {% elif i.bookinguser_status == 4 %}
+                        <span class="badge paid">Pending Full Payment</span>
+                        {% elif i.bookinguser_status == 5 %}
+                        <span class="badge paid">Full Amount Paid</span>
+                        {% endif %}
+                        {% elif i.booking_status == 2 %}
+                        -
+                        {% else %}
+                        <span class="badge waiting">-</span>
+                        {% endif %}
+                    </td>
+
+                    <!-- PAYMENT -->
+                    
                     <!-- <td>
                         {% if i.bookinguser_status == 0 %}
                         <span class="badge pending">Waiting</span>
@@ -269,24 +267,36 @@
  -->
 
                     <!-- AMOUNT -->
-                     <!-- AMOUNT -->
-<td>
-    {% if i.booking_status == 1 %}
-        {% if i.booking_amount %}
-            ₹ {{ i.booking_amount }}
-        {% else %}
-            <a class="amount-btn" href="{% url 'Driver:Amount' i.id %}">
-                Add Amount
-            </a>
-        {% endif %}
+                    <!-- AMOUNT -->
+                    <td>
+                        {% if i.booking_status == 1 %}
+                        {% if i.booking_amount %}
+                        ₹ {{ i.booking_amount }}
+                        {% else %}
+                        <a class="amount-btn" href="{% url 'Driver:Amount' i.id %}">
+                            Add Amount
+                        </a>
+                        {% endif %}
 
-    {% elif i.booking_status == 0 %}
-        <span class="badge pending">Waiting</span>
+                        {% elif i.booking_status == 0 %}
+                        <span class="badge pending">Waiting</span>
 
-    {% elif i.booking_status == 2 %}
-        <span class="badge rejected">Rejected</span>
-    {% endif %}
-</td>
+                        {% elif i.booking_status == 2 %}
+                        <span class="badge rejected">Rejected</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if i.booking_status == 1 and i.bookinguser_status == 3 %}
+                        <span class="badge paid">Advance Paid</span>
+                        <a class="amount-btn" href="{% url 'Driver:reqfullamt' i.id %}">Request Full Amount</a>
+                        {% elif i.booking_status == 1 and i.bookinguser_status == 4 %}
+                        <span class="badge paid">Requested Full Payment</span>
+                        {% elif i.bookinguser_status == 5 %}
+                <span class="badge paid">Full Amount Paid</span>
+                        {% else %}
+                        Pending Advance
+                        {% endif %}
+                    </td>
                     <!-- <td>
                         {% if i.booking_status == 1 or i.bookinguser_status == 3 %}
                         ₹ {{i.booking_amount}}

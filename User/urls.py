@@ -16,6 +16,7 @@ urlpatterns = [
     path('MyBooking/',views.MyBooking,name='MyBooking'),
     path('ajaxbookingtype/',views.ajaxbookingtype,name="ajaxbookingtype"),
     path('Payment/<int:bid>/', views.Payment, name='Payment'),
+    path('Paymentfull/<int:bid>/', views.Paymentfull, name='Paymentfull'),
     path('Complaints/<int:bid>/', views.Complaints, name="Complaints"),
     path('MyComplaints/', views.MyComplaints, name="MyComplaints"),
     path('complaintdelete/<int:csid>/', views.complaintdelete, name="complaintdelete"),
@@ -23,6 +24,7 @@ urlpatterns = [
     path('UserAccept/<int:aubid>/',views.UserAccept,name="UserAccept"),
     path('UserReject/<int:rubid>/',views.UserReject,name="UserReject"),
     path('Ajaxvehicletype/',views.Ajaxvehicletype,name="Ajaxvehicletype"),
+    # path('comadd/<int:bid>/', views.comadd, name="comadd"),
 
 ]
 

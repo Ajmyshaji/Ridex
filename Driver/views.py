@@ -112,6 +112,12 @@ def rejectbookingdata(request,rbid):
     data.save()
     return render(request,"Driver/Requestview.html",{'msg':'rejected'})
 
+def reqfullamt(request,bid):
+    data=tbl_booking.objects.get(id=bid)
+    data.bookinguser_status=4
+    data.save()
+    return render(request,"Driver/Requestview.html",{'msg':'Requested Full Payment'})
+
 # def Amount(request):
 #     driverdata=tbl_driver.objects.get(id=request.session['drid'])
 #     bookingdata = tbl_booking.objects.filter(vehicle__driver=driverdata)

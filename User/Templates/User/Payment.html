@@ -10,72 +10,101 @@
 <style>
 :root{
     --ridex-gold:#C49A5A;
+    --light-gray:#f4f6fb;
 }
 
 body{
-    background:#f4f6fb;
+    margin:0;
+    background:var(--light-gray);
     font-family:'Segoe UI', sans-serif;
 }
 
-/* PAGE TITLE */
-.page-title{
-    text-align:center;
-    margin:35px 0;
-}
-
-.page-title h1{
-    font-size:32px;
-    font-weight:800;
-    font-style:italic;
-    color:var(--ridex-gold);
-    display: inline-block;            /* so underline fits text width */
-    border-bottom: 4px solid var(--ridex-gold); /* underline */
-    padding-bottom: 8px;              /* space between text and underline */
-}
-
-/* PAYMENT CARD */
-.payment-wrapper{
+/* RECEIPT CONTAINER */
+.receipt-wrapper{
     display:flex;
     justify-content:center;
     align-items:center;
+    padding:50px 15px;
 }
 
-.payment-card{
-    width:420px;
-    max-width:95%;
-    background:#ffffff;
-    padding:30px;
-    border-radius:18px;
-    box-shadow:0 18px 40px rgba(0,0,0,0.12);
-    animation:fadeUp 0.6s ease;
+.receipt-card{
+    width:650px;
+    max-width:100%;
+    background:#fff;
+    border-radius:16px;
+    box-shadow:0 20px 45px rgba(0,0,0,0.12);
+    overflow:hidden;
+    animation:fadeUp 0.5s ease;
 }
 
-/* TABLE */
-.payment-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-bottom:25px;
-}
-
-.payment-table th,
-.payment-table td{
-    padding:14px;
+/* HEADER */
+.receipt-header{
+    background:var(--ridex-gold);
+    color:#111;
+    padding:25px;
     text-align:center;
+}
+
+.receipt-header h2{
+    margin:0;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+.receipt-header p{
+    margin:5px 0 0;
+    font-size:14px;
+    font-weight:500;
+}
+
+/* BODY */
+.receipt-body{
+    padding:30px;
+}
+
+.receipt-row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:15px;
     font-size:15px;
 }
 
-.payment-table th{
-    background:var(--ridex-gold);
-    color:#111;
-    border-radius:10px 10px 0 0;
-}
-
-.payment-table td{
-    background:#f9fafb;
+.receipt-row span:first-child{
     font-weight:600;
+    color:#555;
 }
 
-/* PAY BUTTON */
+.receipt-row span:last-child{
+    font-weight:700;
+}
+
+/* DIVIDER */
+.divider{
+    height:1px;
+    background:#e5e5e5;
+    margin:20px 0;
+}
+
+/* TOTAL SECTION */
+.total-section{
+    text-align:right;
+}
+
+.total-section h3{
+    margin:0;
+    font-size:22px;
+    color:var(--ridex-gold);
+}
+
+/* FOOTER */
+.receipt-footer{
+    text-align:center;
+    padding:20px;
+    font-size:13px;
+    color:#777;
+}
+
+/* BUTTON */
 .pay-btn{
     width:100%;
     padding:14px;
@@ -85,6 +114,7 @@ body{
     font-size:15px;
     font-weight:700;
     cursor:pointer;
+    margin-top:20px;
     transition:0.3s;
 }
 
@@ -109,33 +139,87 @@ body{
 
 <body>
 
-<div class="page-title">
-    <h1>Payment</h1>
-</div>
+<div class="receipt-wrapper">
+    <div class="receipt-card">
 
-<div class="payment-wrapper">
-    <div class="payment-card">
+        <div class="receipt-header">
+            <h2>PAYMENT RECEIPT</h2>
+            <p>Ridex Vehicle Booking</p>
+        </div>
 
-        <form method="post">
-            {% csrf_token %}
+        <div class="receipt-body">
 
-            <table class="payment-table">
-                <tr>
-                    <th>Total Amount</th>
-                </tr>
-                <tr>
-                    <td>₹ {{ bookingdata.booking_amount }}</td>
-                </tr>
-            </table>
+            <div class="receipt-row">
+                <span>Vehicle</span>
+                <span>{{ bookingdata.vehicle.vehicle_name }}</span>
+            </div>
 
-            <input type="submit" value="Pay Now" class="pay-btn">
-        </form>
+            <div class="receipt-row">
+                <span>From</span>
+                <span>{{ bookingdata.booking_fromplace }}</span>
+            </div>
+
+            <div class="receipt-row">
+                <span>To</span>
+                <span>{{ bookingdata.booking_toplace }}</span>
+            </div>
+
+            <div class="receipt-row">
+                <span>Total Distance</span>
+                <span>{{ bookingdata.booking_distance }} KM</span>
+            </div>
+
+            <div class="receipt-row">
+                <span>Total Days</span>
+                <span>{{ bookingdata.booking_days }} Day(s)</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="receipt-row">
+                <span>Total Amount</span>
+                <span>₹ {{ bookingdata.booking_amount }}</span>
+            </div>
+
+            <div class="receipt-row">
+                <span>Advance Amount</span>
+                <span>₹ {{ bookingdata.booking_advance }}</span>
+            </div>
+
+            <div class="divider"></div>
+            
+            {% if advance %}
+            <div class="total-section">
+                <h3>Payable Now: ₹ {{advance}}</h3>
+            </div>
+            {% endif %}
+
+            {% if bal %}
+            <div class="total-section">
+                <h3>Payable Balance: ₹ {{bal}}</h3>
+            </div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <input type="submit" value="Confirm & Pay" class="pay-btn">
+            </form>
+
+        </div>
+
+        <div class="receipt-footer">
+            Thank you for choosing Ridex 🚗 <br>
+            Safe and Happy Journey!
+        </div>
 
     </div>
 </div>
 
 </body>
 </html>
+
+<br>
+<br>
 
 {% if msg %}
 <script>

@@ -125,9 +125,6 @@ def Booking(request, vid):
         return redirect("Guest:Login")
     else:
         userdata = tbl_user.objects.get(id=request.session['uid'])
-        # districtdata = tbl_district.objects.all()
-        # placedata = tbl_place.objects.all()
-        # localplacedata = tbl_localplace.objects.all()
         bookingdata = tbl_booking.objects.all()
         vehicledata = tbl_vehicle.objects.all()
 
@@ -136,15 +133,11 @@ def Booking(request, vid):
             booktype = request.POST.get("sel_booktype")
             fromdate = request.POST.get("txt_fromdate")
             todate = request.POST.get("txt_todate")
-
-            # fromlocalplace = tbl_localplace.objects.get(
-            #     id=request.POST.get("from_localplace")
-            # )
-            # tolocalplace = tbl_localplace.objects.get(
-            #     id=request.POST.get("to_localplace")
-            # )
-
             vehicle = tbl_vehicle.objects.get(id=vid)
+
+            #location name from map
+            from_place = request.POST.get("from_place")
+            to_place = request.POST.get("to_place")
 
             # Convert to date object
             from_date_obj = datetime.strptime(fromdate, "%Y-%m-%d").date()
@@ -177,12 +170,12 @@ def Booking(request, vid):
             tbl_booking.objects.create(
                 booking_fromdate=booking_fromdate,
                 booking_todate=booking_todate,
+                booking_fromplace=from_place,
+                booking_toplace=to_place, 
+                booking_days=total_days,
                 booking_amount=total_amount,
                 booking_advance=advance,
-                booking_days=total_days,
                 booking_distance=distance,
-                # fromlocalplace=fromlocalplace,
-                # tolocalplace=tolocalplace,
                 user=userdata,
                 vehicle=vehicle
             )
@@ -193,9 +186,6 @@ def Booking(request, vid):
 
         else:
             return render(request, "User/Booking.html", {
-                # 'districtdata': districtdata,
-                # 'placedata': placedata,
-                # 'localplacedata': localplacedata,
                 'bookingdata': bookingdata,
                 'vehicledata': vehicledata
             })
@@ -225,12 +215,30 @@ def Payment(request, bid):
     else:
         userdata = tbl_user.objects.get(id=request.session['uid'])
         bookingdata = tbl_booking.objects.get(id=bid, user=userdata)
+        advance=int(bookingdata.booking_advance)
+
         if request.method == "POST":
             bookingdata.bookinguser_status = 3   
             bookingdata.save()
             return render(request, "User/Payment.html", {'msg': 'Payment Successful'})
         else:
-            return render(request, "User/Payment.html", {'bookingdata': bookingdata})   
+            return render(request, "User/Payment.html", {'bookingdata': bookingdata,'advance':advance})   
+        
+def Paymentfull(request, bid):
+    if "uid" not in request.session:
+        return redirect("Guest:Login")
+    else:
+        userdata = tbl_user.objects.get(id=request.session['uid'])
+        bookingdata = tbl_booking.objects.get(id=bid, user=userdata)
+        total=int(bookingdata.booking_amount)
+        advance=int(bookingdata.booking_advance)
+        bal=total-advance
+        if request.method == "POST":
+            bookingdata.bookinguser_status = 5   
+            bookingdata.save()
+            return render(request, "User/Payment.html", {'msg': 'Full Payment Successful'})
+        else:
+            return render(request, "User/Payment.html", {'bookingdata': bookingdata,'bal':bal})   
         
 # def Complaints(request, bid):
 #     if "uid" not in request.session:
@@ -287,5 +295,11 @@ def UserReject(request,rubid):
     booking.bookinguser_status = 2
     booking.save()
     return redirect('User:MyBooking')
+# def comadd(request, bid):
+#     booking = tbl_booking.objects.get(id=bid)
+#     complaints = tbl_complaints.objects.filter(booking=booking)
+#     complaints.complaint_status = 1
+#     complaints.save()
+#     return redirect("User:MyBooking")
 
 

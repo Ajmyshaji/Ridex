@@ -137,6 +137,11 @@ input, select{
         <option value="single">One-Day Trip</option>
         <option value="multiple">Multi-Day Trip</option>
     </select>
+
+    <!-- for backend insert place name -->
+    <input type="hidden" name="from_place" id="from_place">
+    <input type="hidden" name="to_place" id="to_place">
+
 </div>
 
 <div class="form-grid">
@@ -155,63 +160,6 @@ input, select{
         <div class="section-title">Location</div>
 
         <div id="distanceBox" style="margin-top:10px;font-weight:bold;"></div>
-
-
-        <!-- FROM -->
-        <!-- <div class="section-title">From Location</div>
-        <div class="form-grid">
-            <div>
-                <label>District</label>
-                <select name="from_district" id="from_district" required>
-                    <option value="">Select District</option>
-                    {% for i in districtdata %}
-                    <option value="{{ i.id }}">{{ i.district_name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div>
-                <label>Place</label>
-                <select name="from_place" id="from_place" required>
-                    <option value="">Select Place</option>
-                </select>
-            </div>
-
-            <div>
-                <label>Local Place</label>
-                <select name="from_localplace" id="from_localplace" required>
-                    <option value="">Select Local Place</option>
-                </select>
-            </div>
-        </div> -->
-
-        <!-- TO -->
-        <!-- <div class="section-title">To Location</div>
-        <div class="form-grid">
-            <div>
-                <label>District</label>
-                <select name="to_district" id="to_district" required>
-                    <option value="">Select District</option>
-                    {% for i in districtdata %}
-                    <option value="{{ i.id }}">{{ i.district_name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div>
-                <label>Place</label>
-                <select name="to_place" id="to_place" required>
-                    <option value="">Select Place</option>
-                </select>
-            </div>
-
-            <div>
-                <label>Local Place</label>
-                <select name="to_localplace" id="to_localplace" required>
-                    <option value="">Select Local Place</option>
-                </select>
-            </div>
-        </div> -->
 
         <div class="btn-group">
             <button type="button" id="openMap" class="btn-submit">
@@ -316,6 +264,10 @@ $('#openMap').click(function(){
                     let fromName = await getPlaceName(fromLat, fromLng);
                     let toName = await getPlaceName(toLat, toLng);
 
+                    $('#from_place').val(fromName);
+                    $('#to_place').val(toName);
+
+
                     $('#distanceBox').html(
                         // "<div class="section-title">Location</div>" +
                         "<strong>FROM:</strong> " + fromName + "<br>" +
@@ -381,24 +333,6 @@ async function getPlaceName(lat, lng) {
     }
 }
 </script>
-
-
- <!-- <script>
-function getPlaceName(lat, lng, callback) {
-    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
-        .then(response => response.json())
-        .then(data => {
-            let district = data.address.state_district || data.address.district || '';
-            let place = data.address.city || data.address.town || data.address.village || data.address.suburb || '';
-            callback(district, place);
-        })
-        .catch(() => {
-            callback("Unknown", "Unknown");
-        });
-}
-</script> -->
-
-
 <!-- Distance Calculation -->
  <script>
 function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -416,53 +350,6 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 </script>
-
-
-<!-- AJAX -->
-<!-- <script>
-$('#from_district').change(function(){
-    $.ajax({
-        url:"{% url 'Guest:AjaxPlace' %}",
-        data:{did:$(this).val()},
-        success:function(data){
-            $('#from_place').html(data);
-            $('#from_localplace').html('<option value="">Select Local Place</option>');
-        }
-    });
-});
-
-$('#from_place').change(function(){
-    $.ajax({
-        url:"{% url 'User:Ajaxlocalplace' %}",
-        data:{did:$(this).val()},
-        success:function(data){
-            $('#from_localplace').html(data);
-        }
-    });
-});
-
-$('#to_district').change(function(){
-    $.ajax({
-        url:"{% url 'Guest:AjaxPlace' %}",
-        data:{did:$(this).val()},
-        success:function(data){
-            $('#to_place').html(data);
-            $('#to_localplace').html('<option value="">Select Local Place</option>');
-        }
-    });
-});
-
-$('#to_place').change(function(){
-    $.ajax({
-        url:"{% url 'User:Ajaxlocalplace' %}",
-        data:{did:$(this).val()},
-        success:function(data){
-            $('#to_localplace').html(data);
-        }
-    });
-});
-</script> -->
-
 <script>
 function toggleDates() {
     var type = document.getElementById("sel_booktype").value;

@@ -23,8 +23,11 @@ class tbl_booking(models.Model):
     vehicle=models.ForeignKey(tbl_vehicle,on_delete=models.CASCADE)
     booking_fromdate=models.DateField(null=True)
     booking_todate=models.DateField()
-    fromlocalplace=models.ForeignKey(tbl_localplace, on_delete=models.CASCADE,related_name="from_place",null=True)
-    tolocalplace=models.ForeignKey(tbl_localplace, on_delete=models.CASCADE,related_name="to_place",null=True)
+    booking_fromplace = models.CharField(max_length=200, null=True)
+    booking_toplace = models.CharField(max_length=200, null=True)
+
+    # fromlocalplace=models.ForeignKey(tbl_localplace, on_delete=models.CASCADE,related_name="from_place",null=True)
+    # tolocalplace=models.ForeignKey(tbl_localplace, on_delete=models.CASCADE,related_name="to_place",null=True)
 
 class tbl_complaints(models.Model):
     complaint_title=models.CharField(max_length=50)

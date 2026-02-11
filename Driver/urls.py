@@ -14,6 +14,7 @@ urlpatterns = [
      path('rejectbookingdata/<int:rbid>/',views.rejectbookingdata,name="rejectbookingdata"),
     #  path('Amount/',views.Amount ,name="Amount"),
      path('Amount/<int:bid>/', views.Amount, name="Amount"),
+     path('reqfullamt/<int:bid>/', views.reqfullamt, name="reqfullamt"),
      path('Logout/',views.Logout,name="Logout"),
 
 ]
