@@ -53,6 +53,62 @@ def EditProfile(request):
             return render(request,"Driver/EditProfile.html",{'msg':'Updated'})
         else:
             return render(request,"Driver/EditProfile.html",{'Data':profiledata})
+
+def Brand(request):
+    if "drid" not in request.session:
+        return redirect("Guest:Login")
+    else:
+        admindata=tbl_adminregistration.objects.get(id=request.session['aid'])
+        branddata=tbl_brand.objects.all()
+        if request.method=="POST":
+            brand=request.POST.get("txt_brand")
+            brandcount=tbl_brand.objects.filter(brand_name=brand).count()
+            if brandcount >0:
+                return render(request,"Driver/Brand.html",{'msg':"Brand Aready Exist"})
+            else:
+                tbl_brand.objects.create(brand_name=brand)
+            return render(request,"Driver/Brand.html",{'msg':"Data Inserted"})
+        else:
+            return render(request,"Driver/Brand.html",{'Data':admindata,'branddata':branddata})
+        
+def deleBrand(request,dbid):
+    tbl_brand.objects.get(id=dbid).delete()
+    return redirect("Driver:Brand")
+
+def Model(request):
+    if "drid" not in request.session:
+        return redirect("Guest:Login")
+    else:
+        admindata=tbl_adminregistration.objects.get(id=request.session['aid'])
+        branddata=tbl_brand.objects.all()
+        modeldata=tbl_model.objects.all()
+        if request.method=="POST":
+            model=request.POST.get("txt_model")
+            brandname=tbl_brand.objects.get(id=request.POST.get("sel_brand"))
+            modelcount=tbl_model.objects.filter(model_name=model).count()
+            if modelcount >0:
+                return render(request,"Driver/Model.html",{'msg':"Model Aready Exist"})
+            else:
+                tbl_model.objects.create(model_name=model,brand=brandname)
+            return render(request,"Driver/Model.html",{'msg':"Data Inserted"})
+        else:
+            return render(request,"Driver/Model.html",{'Data':admindata,'branddata':branddata,'modeldata':modeldata})
+def editmodel(request,emid):
+    branddata=tbl_brand.objects.all()
+    editdata=tbl_model.objects.get(id=emid)
+    if request.method=="POST":
+        model=request.POST.get("txt_model")
+        brandname=tbl_brand.objects.get(id=request.POST.get("sel_brand"))
+        editdata.model_name=model
+        editdata.brand=brandname
+        editdata.save()
+        return redirect("Driver:Model")
+    else:
+        return render(request,"Driver/Model.html/",{'branddata':branddata,'editdata':editdata})
+def delmodel(request,dmid):
+    tbl_model.objects.get(id=dmid).delete()
+    return redirect("Driver:Model")
+
 def DriverHomePage(request):
     if "drid" not in request.session:
         return redirect("Guest:Login")

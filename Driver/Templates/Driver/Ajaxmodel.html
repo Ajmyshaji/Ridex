@@ -1,4 +1,10 @@
-<option value="">----Select----</option>
-{% for i in modeldata %}
-<option value="{{i.id}}">{{i.model_name}}</option>
-{% endfor %}
+
+<select name="sel_model" id="sel_model"
+    onchange="if(this.value) window.location.href=this.value;">
+    <option value="">-- Select Model --</option>
+    {% for i in modeldata %}
+    <option value="{{i.id}}">{{i.model_name}}</option>
+    {% endfor %}
+    <option value="{% url 'Driver:Model' %}">Add Model</option>
+
+</select>

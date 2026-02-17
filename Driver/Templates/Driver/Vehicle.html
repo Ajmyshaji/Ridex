@@ -231,11 +231,25 @@ body{
 
     <div class="form-group">
         <label>Model</label>
-        <select name="sel_model" id="sel_model" required>
-            <option value="">-- Select Model --</option>
-        </select>
-    </div>
+        <select name="sel_model" id="sel_model"
+        onchange="if(this.value) window.location.href=this.value;">
+    
+    <option value="">-- Select Model --</option>
+    <option value="{% url 'Driver:Model' %}">Add Model</option>
 
+</select>
+    </div>
+     <!-- Model -->
+                    <!-- <div class="col-md-6">
+                        <label class="form-label fw-semibold">Model Name</label>
+                        <input type="text"
+                               name="txt_model"
+                               value="{{ editdata.model_name }}"
+                               class="form-control"
+                               required
+                               pattern="^[A-Z]+[a-zA-Z ]*$"
+                               title="First letter must be capital, alphabets only">
+                    </div> -->
     <div class="form-group">
         <label>Vehicle Type</label>
         <select name="sel_vehicle" required>

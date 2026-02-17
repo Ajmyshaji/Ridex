@@ -105,8 +105,10 @@
         text-decoration: none;
         font-size: 13px;
         font-weight: 600;
+        width: 150px;
         transition: 0.3s;
         display: inline-block;
+        margin-top: 5px;
     }
 
     .btn-link:hover {
@@ -171,28 +173,53 @@
                 <span class="badge paid">Paid</span> -->
                 {% endif %}
             </td>
-            <!-- STATUS user-->
-            <td class="action">
-                {% if i.booking_status == 0 %}
-                 <span class="badge waiting">Waiting</span>
-                {% elif i.bookinguser_status == 1 %}
-                <span class="badge accepted">Accepted</span>
-                {% elif i.bookinguser_status == 2 %}
-                <span class="badge rejected">Rejected</span>
-                {% elif i.bookinguser_status == 3 %}
-                <span class="badge paid">Advance Paid</span>
-                {% elif i.bookinguser_status == 4 %}
-                <span class="badge paid">Pending Full Payment</span>
-{% elif i.bookinguser_status == 5 %}
-                <span class="badge paid">Full Amount Paid</span>
-                {% elif i.booking_status == 1 and i.booking_amount %}
-                <a class="accept" href="{% url 'User:UserAccept' i.id %}">Accept</a>
-                <a class="reject" href="{% url 'User:UserReject' i.id %}">Reject</a>
-               
-                 {% else %}
-                <span class="muted">N/A</span>
-                {% endif %}
-            </td>
+            <!-- STATUS user -->
+<!-- STATUS user -->
+ <td class="action">
+
+    {% if i.bookinguser_status == 0 %}
+        <a class="btn-link" href="{% url 'User:UserAccept' i.id %}">Confirm Booking</a>
+        <a class="btn-link" href="{% url 'User:UserReject' i.id %}">Cancel</a>
+
+    {% elif i.bookinguser_status == 2 %}
+        <span class="badge rejected">Rejected</span>
+
+    {% elif i.bookinguser_status == 1 or i.bookinguser_status == 3 or i.bookinguser_status == 4 or i.bookinguser_status == 5 or i.bookinguser_status == 6 %}
+        <span class="badge accepted">Booking Confirmed</span>
+    
+    {% else %}
+        <span class="muted">N/A</span>
+    {% endif %}
+
+</td>
+
+<!-- <td class="action">
+
+    {% if i.bookinguser_status == 0 %}
+        <a class="btn-link" href="{% url 'User:UserAccept' i.id %}">Accept</a>
+        <a class="btn-link" href="{% url 'User:UserReject' i.id %}">Reject</a>
+
+    {% elif i.bookinguser_status == 1 %}
+        <span class="badge accepted">Accepted</span>
+
+    {% elif i.bookinguser_status == 2 %}
+        <span class="badge rejected">Rejected</span>
+
+    {% elif i.bookinguser_status == 3 %}
+        <span class="badge paid">Advance Paid</span>
+
+    {% elif i.bookinguser_status == 4 %}
+        <span class="badge paid">Pending Full Payment</span>
+
+    {% elif i.bookinguser_status == 5 or i.bookinguser_status == 6 %}
+        <span class="badge paid">Full Amount Paid</span>
+
+    {% else %}
+        <span class="muted">N/A</span>
+    {% endif %}
+
+</td> -->
+          
             <!-- AMOUNT -->
             <td>
                 {% if i.booking_amount %}
@@ -211,56 +238,38 @@
             </td>
 
             <!-- PAYMENT -->
-            <td>
-                {% if i.bookinguser_status == 1 %}
+           <td>
+            {% if i.bookinguser_status == 1 %}
                 <a href="{% url 'User:Payment' i.id %}" class="btn-link">Pay Now</a>
-                {% elif i.bookinguser_status == 2 %}
+            {% elif i.bookinguser_status == 2 %}
                 <span class="badge rejected">Reject</span>
-                {% elif i.bookinguser_status == 3 %}
+            {% elif i.bookinguser_status == 3 %}
                 <span class="badge paid">Advance Paid</span>
-                {% elif i.bookinguser_status == 4 %}
+            {% elif i.bookinguser_status == 4 %}
                 <a href="{% url 'User:Paymentfull' i.id %}" class="btn-link">Pay Full Amount</a>
-                
-                {% elif i.bookinguser_status == 5 %}
+            {% elif i.bookinguser_status == 5 or i.bookinguser_status == 6 %}
                 <span class="badge paid">Full Amount Paid</span>
-                {% else %}
+            {% else %}
                 <span class="muted">N/A</span>
-                {% endif %}
+            {% endif %}
             </td>
+
            
 
             <!-- COMPLAINT -->
-             <td> 
-                {% if i.bookinguser_status == 5 %} 
-                <a href="{% url 'User:Complaints' i.id %}" class="btn-link">Add</a> 
-                {% else %} 
-                <span class="muted">N/A</span> 
-                {% endif %} 
-            </td>
-            <!-- <td>
-                {% if i.bookinguser_status == 5 %}
-                    
-                    {% if i.complaint_status == 0 %}
-                        <a href="{% url 'User:Complaints' i.id %}" class="btn-link">
-                            Add
-                        </a>
+             <td>
+    {% if i.bookinguser_status == 5 %}
+        <a href="{% url 'User:Complaints' i.id %}" class="btn-link">Add</a>
 
-                    {% elif i.complaint_status == 1 %}
-                        <span class="badge bg-warning text-dark">
-                            Complaint Added
-                        </span>
+    {% elif i.bookinguser_status == 6 %}
+        <span class="badge paid">Complaint Added</span>
 
-                    {% elif i.complaint_status == 2 %}
-                        <span class="badge bg-success">
-                            Reply
-                        </span>
+    {% else %}
+        <span class="muted">N/A</span>
+    {% endif %}
+</td>
 
-                    {% endif %}
-
-                {% else %}
-                    <span class="muted">N/A</span>
-                {% endif %}
-            </td> -->
+            
 
         </tr>
         {% endfor %}

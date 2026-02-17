@@ -219,8 +219,23 @@
                         {% endif %}
                     </td>
                     <!-- STATUS user-->
+                     <td class="action">
+
+    {% if i.bookinguser_status == 0 %}
+        <span class="badge pending">Booked</span>
+    {% elif i.bookinguser_status == 2 %}
+        <span class="badge rejected">Booking Cancelled</span>
+
+    {% elif i.bookinguser_status == 1 or i.bookinguser_status == 3 or i.bookinguser_status == 4 or i.bookinguser_status == 5 or i.bookinguser_status == 6 %}
+        <span class="badge accepted">Booking Confirmed</span>
+
+    {% else %}
+        <span class="muted">N/A</span>
+    {% endif %}
+
+</td>
                     <!-- USER STATUS -->
-                    <td class="action">
+                    <!-- <td class="action">
                         {% if i.booking_status == 1 %}
                         {% if i.bookinguser_status == 0 %}
                         <span class="badge accepted">Waiting</span>
@@ -240,7 +255,7 @@
                         {% else %}
                         <span class="badge waiting">-</span>
                         {% endif %}
-                    </td>
+                    </td> -->
 
                     <!-- PAYMENT -->
                     
@@ -291,7 +306,7 @@
                         <a class="amount-btn" href="{% url 'Driver:reqfullamt' i.id %}">Request Full Amount</a>
                         {% elif i.booking_status == 1 and i.bookinguser_status == 4 %}
                         <span class="badge paid">Requested Full Payment</span>
-                        {% elif i.bookinguser_status == 5 %}
+                        {% elif i.bookinguser_status >= 5 %}
                 <span class="badge paid">Full Amount Paid</span>
                         {% else %}
                         Pending Advance

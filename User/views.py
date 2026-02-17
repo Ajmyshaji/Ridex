@@ -240,22 +240,6 @@ def Paymentfull(request, bid):
         else:
             return render(request, "User/Payment.html", {'bookingdata': bookingdata,'bal':bal})   
         
-# def Complaints(request, bid):
-#     if "uid" not in request.session:
-#         return redirect("Guest:Login")
-#     else:
-#         userdata = tbl_user.objects.get(id=request.session['uid'])
-#         booking = tbl_booking.objects.get(id=bid, user=userdata)
-#         complaintdata = tbl_complaints.objects.filter(user=userdata,booking=booking)
-#         if request.method == "POST":
-#             title = request.POST.get("txt_title")
-#             content = request.POST.get("txt_content")
-#             tbl_complaints.objects.create(complaint_title=title,complaint_content=content,user=userdata,booking=booking)
-#             complaintdata.complaint_status = 1
-#             complaintdata.save()
-#             return render(request,"User/Complaints.html",{'msg': "Complaint submitted successfully",'booking': booking,'complaintdata': complaintdata})
-#         else:
-#             return render(request,"User/Complaints.html",{'booking': booking,'complaintdata': complaintdata})
 
 def Complaints(request, bid):
     if "uid" not in request.session:
@@ -268,7 +252,10 @@ def Complaints(request, bid):
             title = request.POST.get("txt_title")
             content = request.POST.get("txt_content")
             tbl_complaints.objects.create(complaint_title=title,complaint_content=content,user=userdata,booking=booking)
-            return render(request, "User/Complaints.html", {'msg': "Complaint submitted successfully",'booking': booking,'complaintdata': complaintdata})
+            booking.bookinguser_status = 6
+            booking.save()
+            return redirect("User:MyBooking")
+            #return render(request, "User/Complaints.html", {'msg': "Complaint submitted successfully",'booking': booking,'complaintdata': complaintdata})
         else:
             return render(request, "User/Complaints.html", {'booking': booking,'complaintdata': complaintdata})
 def complaintdelete(request,csid):
@@ -295,11 +282,12 @@ def UserReject(request,rubid):
     booking.bookinguser_status = 2
     booking.save()
     return redirect('User:MyBooking')
+
 # def comadd(request, bid):
 #     booking = tbl_booking.objects.get(id=bid)
-#     complaints = tbl_complaints.objects.filter(booking=booking)
-#     complaints.complaint_status = 1
-#     complaints.save()
+#     booking.bookinguser_status = 6
+#     booking.save()
 #     return redirect("User:MyBooking")
 
 
+    
