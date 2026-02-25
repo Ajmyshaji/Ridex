@@ -24,7 +24,9 @@ urlpatterns = [
     path('UserAccept/<int:aubid>/',views.UserAccept,name="UserAccept"),
     path('UserReject/<int:rubid>/',views.UserReject,name="UserReject"),
     path('Ajaxvehicletype/',views.Ajaxvehicletype,name="Ajaxvehicletype"),
-    #path('comadd/<int:bid>/', views.comadd, name="comadd"),
-
+   
+    path('rating/<int:mid>',views.rating,name="rating"),  
+    path('ajaxstar/',views.ajaxstar,name="ajaxstar"),
+    path('starrating/',views.starrating,name="starrating"),
 ]
 

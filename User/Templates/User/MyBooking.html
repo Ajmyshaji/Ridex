@@ -176,7 +176,7 @@
             <!-- STATUS user -->
 <!-- STATUS user -->
  <td class="action">
-
+{% if i.booking_status == 1 %}
     {% if i.bookinguser_status == 0 %}
         <a class="btn-link" href="{% url 'User:UserAccept' i.id %}">Confirm Booking</a>
         <a class="btn-link" href="{% url 'User:UserReject' i.id %}">Cancel</a>
@@ -190,7 +190,9 @@
     {% else %}
         <span class="muted">N/A</span>
     {% endif %}
-
+{% else %}
+    <span class="muted">N/A</span>
+{% endif %}
 </td>
 
 <!-- <td class="action">

@@ -282,15 +282,19 @@
  -->
 
                     <!-- AMOUNT -->
+                     <td>
+                        {% if i.booking_amount %}
+                        ₹ {{ i.booking_amount }}
+                        {% elif i.booking_status == 2 %}
+                        <span class="badge rejected">Rejected</span>
+                        {% endif %}
+                    </td>
                     <!-- AMOUNT -->
-                    <td>
+                    <!-- <td>
                         {% if i.booking_status == 1 %}
                         {% if i.booking_amount %}
                         ₹ {{ i.booking_amount }}
-                        {% else %}
-                        <a class="amount-btn" href="{% url 'Driver:Amount' i.id %}">
-                            Add Amount
-                        </a>
+                        
                         {% endif %}
 
                         {% elif i.booking_status == 0 %}
@@ -299,7 +303,7 @@
                         {% elif i.booking_status == 2 %}
                         <span class="badge rejected">Rejected</span>
                         {% endif %}
-                    </td>
+                    </td> -->
                     <td>
                         {% if i.booking_status == 1 and i.bookinguser_status == 3 %}
                         <span class="badge paid">Advance Paid</span>

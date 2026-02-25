@@ -4,7 +4,7 @@ from Driver.models import *
 from User.models import *
 from Guest.models import *
 from datetime import datetime
-
+from django.http import JsonResponse
 # Create your views here.
 def Profile(request):
     if "uid" not in request.session:
@@ -283,11 +283,58 @@ def UserReject(request,rubid):
     booking.save()
     return redirect('User:MyBooking')
 
-# def comadd(request, bid):
-#     booking = tbl_booking.objects.get(id=bid)
-#     booking.bookinguser_status = 6
-#     booking.save()
-#     return redirect("User:MyBooking")
 
-
+def rating(request,mid):
+    parray=[1,2,3,4,5]
+    mid=mid
+    # wdata=tbl_booking.objects.get(id=mid)
     
+    counts=0
+    counts=stardata=tbl_rating.objects.filter(driver=mid).count()
+    if counts>0:
+        res=0
+        stardata=tbl_rating.objects.filter(driver=mid).order_by('-datetime')
+        for i in stardata:
+            res=res+i.rating_data
+        avg=res//counts
+        # print(avg)
+        return render(request,"User/Rating.html",{'mid':mid,'data':stardata,'ar':parray,'avg':avg,'count':counts})
+    else:
+         return render(request,"User/Rating.html",{'mid':mid})
+
+def ajaxstar(request):
+    parray=[1,2,3,4,5]
+    rating_data=request.GET.get('rating_data')
+    
+    user_review=request.GET.get('user_review')
+    pid=request.GET.get('pid')
+    # wdata=tbl_booking.objects.get(id=pid)
+    tbl_rating.objects.create(user=tbl_user.objects.get(id=request.session['uid']),user_review=user_review,rating_data=rating_data,driver=tbl_driver.objects.get(id=pid))
+    stardata=tbl_rating.objects.filter(driver=pid).order_by('-datetime')
+    return render(request,"User/AjaxRating.html",{'data':stardata,'ar':parray})
+
+def starrating(request):
+    r_len = 0
+    five = four = three = two = one = 0
+    # cdata = tbl_booking.objects.get(id=request.GET.get("pdt"))
+    rate = tbl_rating.objects.filter(driver=request.GET.get("pdt"))
+    ratecount = tbl_rating.objects.filter(driver=request.GET.get("pdt")).count()
+    for i in rate:
+        if int(i.rating_data) == 5:
+            five = five + 1
+        elif int(i.rating_data) == 4:
+            four = four + 1
+        elif int(i.rating_data) == 3:
+            three = three + 1
+        elif int(i.rating_data) == 2:
+            two = two + 1
+        elif int(i.rating_data) == 1:
+            one = one + 1
+        else:
+            five = four = three = two = one = 0
+        # print(i.rating_data)
+        # r_len = r_len + int(i.rating_data)
+    # rlen = r_len // 5
+    # print(rlen)
+    result = {"five":five,"four":four,"three":three,"two":two,"one":one,"total_review":ratecount}
+    return JsonResponse(result)

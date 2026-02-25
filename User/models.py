@@ -37,5 +37,10 @@ class tbl_complaints(models.Model):
     complaint_status=models.IntegerField(default=0)
     user=models.ForeignKey(tbl_user, on_delete=models.CASCADE)
     booking=models.ForeignKey(tbl_booking, on_delete=models.CASCADE)
-    
-    
+     
+class tbl_rating(models.Model):
+    rating_data=models.IntegerField()
+    user=models.ForeignKey(tbl_user,on_delete=models.CASCADE)
+    user_review=models.CharField(max_length=500)
+    driver=models.ForeignKey(tbl_driver,on_delete=models.CASCADE)   
+    datetime=models.DateTimeField(auto_now_add=True)

@@ -2,6 +2,8 @@ from django.shortcuts import render,redirect
 from Admin.models import *
 from Guest.models import *
 from Driver.models import *
+# from django.conf import settings
+# from django.core.mail import send_mail
 
 
 # Create your views here.
@@ -18,6 +20,18 @@ def NewUser(request):
         address=request.POST.get("txt_address") 
         photo=request.FILES.get("txt_photo")
         usercount=tbl_user.objects.filter(user_email=email).count()
+    #     send_mail(
+    #     'Respected Sir/Madam ',#subject
+    #     "\r You registred successfully "
+    #     "\r You can Login ."
+    #     "\r  We wish you all the best ."
+    #     "\r "
+    #     "\r @Ridex" ,#body
+    #     settings.EMAIL_HOST_USER,
+    #     [email],
+    # )
+        
+
         if usercount >0:
             return render(request,"Guest/NewUser.html",{'msg':"User Aready Exist"})
         else:

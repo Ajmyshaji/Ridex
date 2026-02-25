@@ -167,6 +167,13 @@ body{
     text-decoration:underline;
 }
 
+.details-box{
+    width: 100%;
+    min-height: 120px;   /* height increase */
+    resize: vertical;    /* userക്ക് height change ചെയ്യാം */
+}
+
+
 /* ANIMATION */
 @keyframes fadeUp{
     from{
@@ -203,23 +210,17 @@ body{
 {% csrf_token %}
 
 <div class="form-grid">
-
-    <div class="form-group">
-        <label>Vehicle Name</label>
-        <input type="text" name="txt_name" required>
+     <div class="form-group">
+        <label>Vehicle Type</label>
+        <select name="sel_vehicle" required>
+            <option value="">-- Select Vehicle Type --</option>
+            {% for i in vehicletypedata %}
+            <option value="{{i.id}}">{{i.vehicletype_name}}</option>
+            {% endfor %}
+        </select>
     </div>
 
-    <div class="form-group">
-        <label>Details</label>
-        <input type="text" name="txt_details" required>
-    </div>
-
-    <div class="form-group">
-        <label>Vehicle Photo</label>
-        <input type="file" name="txt_photo" required>
-    </div>
-
-    <div class="form-group">
+     <div class="form-group">
         <label>Brand</label>
         <select name="sel_brand" id="sel_brand" required>
             <option value="">-- Select Brand --</option>
@@ -228,6 +229,65 @@ body{
             {% endfor %}
         </select>
     </div>
+    <div class="form-group">
+    <label>Model</label>
+    
+    <select name="sel_model" id="sel_model">
+        <option value="">-- Select Model --</option>
+
+        {% for i in model %}
+            <option value="{{ i.id }}">{{ i.model_name }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Separate Add Model button -->
+    <div style="margin-top:10px;">
+        <a href="{% url 'Driver:Model' %}" class="btn-link">
+            + Add Model
+        </a>
+    </div>
+</div>
+
+
+    <div class="form-group">
+        <label>Vehicle Name</label>
+        <input type="text" name="txt_name" required>
+    </div>
+   <div class="form-group">
+    <label>Details</label>
+    <textarea name="txt_details" class="form-control details-box" rows="4" required></textarea>
+</div>
+
+
+    <!-- <div class="form-group">
+        <label>Details</label>
+        <input type="text" name="txt_details" required>
+    </div> -->
+
+    <div class="form-group">
+        <label>Vehicle Photo</label>
+        <input type="file" name="txt_photo" required>
+    </div>
+
+    <!-- <div class="form-group">
+        <label>Brand</label>
+        <select name="sel_brand" id="sel_brand" required>
+            <option value="">-- Select Brand --</option>
+            {% for i in branddata %}
+            <option value="{{i.id}}">{{i.brand_name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+    <label>Model</label>
+    
+    <select name="sel_model" id="sel_model">
+        <option value="">-- Select Model --</option>
+
+        {% for i in model %}
+            <option value="{{ i.id }}">{{ i.model_name }}</option>
+        {% endfor %}
+    </select>
 
     <div class="form-group">
         <label>Model</label>
@@ -238,27 +298,9 @@ body{
     <option value="{% url 'Driver:Model' %}">Add Model</option>
 
 </select>
-    </div>
-     <!-- Model -->
-                    <!-- <div class="col-md-6">
-                        <label class="form-label fw-semibold">Model Name</label>
-                        <input type="text"
-                               name="txt_model"
-                               value="{{ editdata.model_name }}"
-                               class="form-control"
-                               required
-                               pattern="^[A-Z]+[a-zA-Z ]*$"
-                               title="First letter must be capital, alphabets only">
-                    </div> -->
-    <div class="form-group">
-        <label>Vehicle Type</label>
-        <select name="sel_vehicle" required>
-            <option value="">-- Select Vehicle Type --</option>
-            {% for i in vehicletypedata %}
-            <option value="{{i.id}}">{{i.vehicletype_name}}</option>
-            {% endfor %}
-        </select>
-    </div>
+    </div> -->
+    
+   
 
     <div class="form-group">
         <label>Base Price</label>
